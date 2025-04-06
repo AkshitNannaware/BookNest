@@ -1,0 +1,125 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Build output
+dist/
+dist-ssr/
+build/
+.temp/
+out/
+.next/
+.nuxt/
+.svelte-kit/
+.sanity/
+.cache/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Testing
+coverage/
+.nyc_output/
+
+# Optional npm cache directory
+.npm/
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Optional REPL history
+.node_repl_history
+
+# macOS folder attributes
+.AppleDouble
+.LSOverride
+
+# Windows image file caches
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# Linux trash folder
+.Trash-*
+
+# Firebase
+.firebase/
+.firebaserc
+
+# Docker
+.dockerignore
+docker-compose*.yml
+Dockerfile
+
+# Storybook
+.storybook-out/
+
+# MongoDB dump files
+dump/
+
+# PM2 logs and runtime files
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Build tools
+*.tsbuildinfo
+
+# Next.js
+.next/
+out/
+
+# Parcel
+.cache/
+.parcel-cache/
+
+# Remix
+/build/
+
+# Turborepo
+turbo/
+
+# VS Code settings
+.vscode/
+
+# IntelliJ
+*.iml
+.idea/
+
+# React Native
+.expo/
+.expo-shared/
+
+# GitHub Codespaces
+.devcontainer/
