@@ -13,6 +13,7 @@ import DashboardLayout from './Dashbaord/Layout/DashboardLayout';
 import Overview from './Dashbaord/Pages/Overview';
 import RoomDetails from './Dashbaord/Pages/RoomDetails';
 import Profile from './Dashbaord/Pages/Profile';
+import Contact from './Pages/Contact/Contact';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
       },
       {
         path: "residencies",

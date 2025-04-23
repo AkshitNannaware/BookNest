@@ -1,119 +1,72 @@
-.img.brand {
-    height: 79px;
-    width: 111px;
-    margin-top: 4px;
-    margin-left: 40px;
+/* .img.brand {
+  height: 79px;
+  width: 111px;
+  margin-top: 4px;
+  margin-left: 50px;
 }
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color:white;
+  border-bottom: 1px solid #eee;
+}
+
+.logo img.brand {
+  width: 110px;
+  height: 70px;
+  border-radius: 5px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  font-size: 24px;
+  font-family: math;
+}
+
+.nav {
+  text-decoration: none;
+  font-weight: bold;
+  color: black;
+  transition: 0.2s;
+}
+
+.nav:hover,
+.nav.active {
+  color: black;
+}
+
+@media screen and (max-width: 768px) {
   .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    background-color: black;
-    border-bottom: 1px solid #eee;
-  }
-  .logo img.brand {
-    width: 111px;
-    height: 80px;
-    border-radius: 5px;
-}
-  
-  .nav-links {
-    display: flex;
-    gap: 22px;
-    align-items: center;
-    font-size: 22px;
-    font-family: math;
-  }
-  
-  .nav {
-    text-decoration: none;
-    font-weight: bold;
-    color: white;
-    transition: 0.2s;
-  }
-  
-  .nav:hover,
-  .nav.active {
-    color: white;
-  }
-  
-  .advanced-search {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1px;
-    padding: 15px;
-    background-color: black;
-    flex-wrap: wrap;
-    margin-top: 10px;
-  }
-  
-  .advanced-search input {
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 180px;
-  }
-  
-  .advanced-search button {
-    padding: 10px 18px;
-    background-color: #ff6600;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  .advanced-search button:hover {
-    background-color: #cc5500;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .navbar {
       flex-direction: column;
       align-items: flex-start;
       gap: 10px;
-    }
-  
-    .nav-links {
+  }
+
+  .nav-links {
       flex-wrap: wrap;
       gap: 10px;
-    }
-  
-    .advanced-search {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  
-    .advanced-search input,
-    .advanced-search button {
-      width: 100%;
-    }
   }
-
-.advanced-search {
-    animation: fadeSlideIn 1s ease forwards;
-    opacity: 0;
-  }
-  
-  @keyframes fadeSlideIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  .icon-button {
-    color: white;
 }
 
+@keyframes fadeSlideIn {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+.icon-button {
+  color: black;
+}
 
 .user-menu {
   position: relative;
@@ -155,4 +108,103 @@
   text-decoration: none;
   display: block;
   font-size: 15px;
+}
+
+.react-datepicker__portal {
+  z-index: 99999 !important;
+  position: absolute;
+} */
+
+.img.brand {
+  height: 79px;
+  width: 111px;
+  margin-top: 4px;
+  margin-left: 50px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: white;
+  border-bottom: 1px solid #eee;
+}
+
+.logo img.brand {
+  width: 110px;
+  height: 70px;
+  border-radius: 5px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  font-size: 24px;
+  font-family: math;
+}
+
+.nav {
+  text-decoration: none;
+  font-weight: bold;
+  color: black;
+}
+
+@media screen and (max-width: 768px) {
+  .navbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+  }
+
+  .nav-links {
+      flex-wrap: wrap;
+      gap: 10px;
+  }
+}
+
+.icon-button {
+  color: black;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.icon-button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  list-style: none;
+  background-color: white;
+  padding: 10px 0;
+  margin: 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  z-index: 999;
+  width: 130px;
+}
+
+.dropdown-list li {
+  padding: 10px 15px;
+}
+
+.dropdown-list a {
+  color: black;
+  text-decoration: none;
+  display: block;
+  font-size: 15px;
+}
+
+.react-datepicker__portal {
+  z-index: 99999 !important;
+  position: absolute;
 }

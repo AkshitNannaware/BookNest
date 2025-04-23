@@ -19,8 +19,6 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // Replace with your API endpoint
-      // const response = await axios.post('/api/auth/login', formData);
       console.log('Login attempt:', formData);
     } catch (error) {
       console.error('Login error:', error);

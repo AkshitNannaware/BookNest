@@ -22,7 +22,7 @@ const RoomDetails = () => {
 
       <form className="bg-white p-6 rounded-lg shadow-md">
         <div className="space-y-6">
-          {/* Location Section */}
+          
           <div>
             <h2 className="text-xl font-semibold mb-4">Location</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -49,7 +49,7 @@ const RoomDetails = () => {
             </div>
           </div>
 
-          {/* Room Details Section */}
+          
           <div>
             <h2 className="text-xl font-semibold mb-4">Room Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -86,7 +86,7 @@ const RoomDetails = () => {
             </div>
           </div>
 
-          {/* Image Upload Section */}
+          
           <div>
             <h2 className="text-xl font-semibold mb-4">Room Photos</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

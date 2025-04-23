@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Upload, User, Mail, Lock, Building2, UserCircle } from 'lucide-react';
+import { Eye, EyeOff, Upload, User, Mail, Lock, Building2, UserCircle, Shield } from 'lucide-react';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    role: 'user',
+    role: 'student',
     photo: null
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -29,16 +29,24 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Create FormData for multipart/form-data
+    if (!formData.name || !formData.email || !formData.password || !formData.role || !formData.photo) {
+      alert("Please fill in all the fields and upload a photo.");
+      setLoading(false);
+      return;
+    }
+
     const submitData = new FormData();
     Object.keys(formData).forEach(key => {
       submitData.append(key, formData[key]);
     });
 
     try {
-      // Replace with your API endpoint
-      // const response = await axios.post('/api/auth/signup', submitData);
-      console.log('Form submitted:', submitData);
+      console.log('Signup Data:');
+      console.log('Name:', formData.name);
+      console.log('Email:', formData.email);
+      console.log('Password:', formData.password);
+      console.log('Role:', formData.role);
+      console.log('Photo:', formData.photo ? formData.photo.name : 'No photo uploaded');
     } catch (error) {
       console.error('Signup error:', error);
     } finally {
@@ -56,45 +64,51 @@ const Signup = () => {
 
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Role Selection */}
-            <div className="grid grid-cols-2 gap-4">
+            
+            <div className="grid grid-cols-3 gap-3">
               <button
                 type="button"
-                onClick={() => setFormData({ ...formData, role: 'user' })}
-                className={`p-4 rounded-xl border-2 transition-all ${formData.role === 'user'
+                onClick={() => setFormData({ ...formData, role: 'student' })}
+                className={`p-3 rounded-xl border-2 transition-all ${formData.role === 'student'
                   ? 'border-blue-500 bg-blue-50'
                   : 'border-gray-200 hover:border-blue-200'
                   }`}
               >
-                <UserCircle className="h-6 w-6 mx-auto mb-2 text-blue-500" />
-                <p className="font-medium text-gray-900">User</p>
+                <UserCircle className="h-5 w-5 mx-auto mb-1 text-blue-500" />
+                <p className="text-sm font-medium">Student</p>
               </button>
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, role: 'owner' })}
-                className={`p-4 rounded-xl border-2 transition-all ${formData.role === 'owner'
+                className={`p-3 rounded-xl border-2 transition-all ${formData.role === 'owner'
                   ? 'border-blue-500 bg-blue-50'
                   : 'border-gray-200 hover:border-blue-200'
                   }`}
               >
-                <Building2 className="h-6 w-6 mx-auto mb-2 text-blue-500" />
-                <p className="font-medium text-gray-900">Owner</p>
+                <Building2 className="h-5 w-5 mx-auto mb-1 text-blue-500" />
+                <p className="text-sm font-medium">Owner</p>
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, role: 'admin' })}
+                className={`p-3 rounded-xl border-2 transition-all ${formData.role === 'admin'
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 hover:border-blue-200'
+                  }`}
+              >
+                <Shield className="h-5 w-5 mx-auto mb-1 text-blue-500" />
+                <p className="text-sm font-medium">Admin</p>
               </button>
             </div>
 
-            {/* Photo Upload */}
             <div className="flex justify-center">
               <div className="relative">
                 <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100">
                   {previewImage ? (
-                    <img
-                      src={previewImage}
-                      alt="Preview"
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={previewImage} alt="Preview" className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <User className="w-12 h-12 text-gray-400" />
+                      <User className="w-10 h-10 text-gray-400" />
                     </div>
                   )}
                 </div>
@@ -110,11 +124,9 @@ const Signup = () => {
               </div>
             </div>
 
-            {/* Name Input */}
+           
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <input
@@ -129,11 +141,9 @@ const Signup = () => {
               </div>
             </div>
 
-            {/* Email Input */}
+           
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <input
@@ -148,11 +158,9 @@ const Signup = () => {
               </div>
             </div>
 
-            {/* Password Input */}
+            
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <input
@@ -169,16 +177,12 @@ const Signup = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
             </div>
 
-            {/* Submit Button */}
+           
             <button
               type="submit"
               disabled={loading}

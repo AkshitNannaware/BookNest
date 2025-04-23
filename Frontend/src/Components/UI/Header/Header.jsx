@@ -2,14 +2,19 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { IoReorderThreeOutline } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Header = () => {
   const [destination, setDestination] = useState('');
-  const [checkIn, setCheckIn] = useState('');
-  const [checkOut, setCheckOut] = useState('');
+  const [checkIn, setCheckIn] = useState(null);
+  const [checkOut, setCheckOut] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleSearch = () => {
+    if (!destination || !checkIn || !checkOut) {
+      alert("Please fill in all search details: Destination, Check-In, and Check-Out.");
+      return;
+    }
     console.log("Search Details:");
     console.log("Destination:", destination);
     console.log("Check-In:", checkIn);
@@ -25,33 +30,13 @@ const Header = () => {
       <div className='navbar'>
         <div className='logo'>
           <NavLink to="/">
-            <img src="/IMG_20250306_153931.png" alt="BookNest Logo" className='brand' />
+            <img src="/IMG_20250415_130640[1].jpg" alt="BookNest Logo" className='brand' />
           </NavLink>
         </div>
-
-        <div className="advanced-search">
-          <input
-            type="text"
-            placeholder="Where are you going?"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-          />
-          <input
-            type="date"
-            value={checkIn}
-            onChange={(e) => setCheckIn(e.target.value)}
-          />
-          <input
-            type="date"
-            value={checkOut}
-            onChange={(e) => setCheckOut(e.target.value)}
-          />
-          <button onClick={handleSearch}>Search</button>
-        </div>
-
         <nav className='nav-links'>
           <NavLink to="/" className="nav">Home</NavLink>
           <NavLink to="/Residencies" className="nav">Residencies</NavLink>
+          <NavLink to="/Contact" className="nav">Contact</NavLink>
 
           <div className="user-menu">
             <div className="icon-button" onClick={toggleDropdown}>
@@ -62,6 +47,7 @@ const Header = () => {
               <ul className="dropdown-list">
                 <li><NavLink to="/Login">Login</NavLink></li>
                 <li><NavLink to="/Signup">Sign Up</NavLink></li>
+                <li><NavLink to="/Dashboard">Dashboard</NavLink></li>
               </ul>
             )}
           </div>
