@@ -30,7 +30,12 @@ const Header = () => {
       <div className='navbar'>
         <div className='logo'>
           <NavLink to="/">
-            <img src="/IMG_20250415_130640[1].jpg" alt="BookNest Logo" className='brand' />
+          {/* <img src="/IMG_20250415_130640[1].jpg" alt="" className='brand' /> */}
+            <img src="/IMG_20250415_130640[1],logo.jpg" alt="BookNest Logo" className='brand' />
+          </NavLink>
+          <NavLink to="/">
+            {/* <img src="/IMG_20250415_130640[1],logo text.jpg" alt="text" className='textbrand'/> */}
+            <p className='textbrand'>Book Nest</p>
           </NavLink>
         </div>
         <nav className='nav-links'>

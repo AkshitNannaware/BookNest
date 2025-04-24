@@ -114,7 +114,21 @@
   z-index: 99999 !important;
   position: absolute;
 } */
-
+.logo {
+  display: flex;
+  align-items: center;
+}
+p.textbrand {
+  /* font-weight: 500;
+  color: navy;
+  margin-top: 11px;
+  font-size: 22px; */
+  font-weight: 500;
+    color: navy;
+    margin-top: 6px;
+    font-size: 22px;
+    margin-left: 4px;
+}
 .img.brand {
   height: 79px;
   width: 111px;
@@ -126,23 +140,27 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
-  background-color: white;
+  padding: 4px 50px;
+  background-color: aliceblue;
   border-bottom: 1px solid #eee;
 }
 
 .logo img.brand {
-  width: 110px;
-  height: 70px;
-  border-radius: 5px;
+  /* width: 99px;
+  height: 55px;
+  border-radius: 5px;  */
+  width: 100px;
+    height: 43px;
+    border-radius: 5px;
 }
 
 .nav-links {
   display: flex;
   gap: 22px;
   align-items: center;
-  font-size: 24px;
+  font-size: 23px;
   font-family: math;
+  margin-top: 10px;
 }
 
 .nav {

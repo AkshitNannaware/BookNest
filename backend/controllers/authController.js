@@ -4,9 +4,12 @@ import User from '../models/userSchema.js';
 import cloudinary from 'cloudinary';
 
 cloudinary.v2.config({
-  cloud_name: 'your-cloud-name',
-  api_key: 'your-api-key',
-  api_secret: 'your-api-secret'
+  // cloud_name: 'your-cloud-name',
+  // api_key: 'your-api-key',
+  // api_secret: 'your-api-secret'
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
 });
 
 // Register Controller
@@ -53,7 +56,8 @@ export const login = async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
-      'your_jwt_secret', // store this in env
+      // 'your_jwt_secret', // store this in env
+      process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
 

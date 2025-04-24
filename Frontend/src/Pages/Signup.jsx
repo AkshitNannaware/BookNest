@@ -25,30 +25,70 @@ const Signup = () => {
     }
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   if (!formData.name || !formData.email || !formData.password || !formData.role || !formData.photo) {
+  //     alert("Please fill in all the fields and upload a photo.");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   const submitData = new FormData();
+  //   Object.keys(formData).forEach(key => {
+  //     submitData.append(key, formData[key]);
+  //   });
+
+  //   try {
+  //     console.log('Signup Data:');
+  //     console.log('Name:', formData.name);
+  //     console.log('Email:', formData.email);
+  //     console.log('Password:', formData.password);
+  //     console.log('Role:', formData.role);
+  //     console.log('Photo:', formData.photo ? formData.photo.name : 'No photo uploaded');
+  //   } catch (error) {
+  //     console.error('Signup error:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     if (!formData.name || !formData.email || !formData.password || !formData.role || !formData.photo) {
       alert("Please fill in all the fields and upload a photo.");
       setLoading(false);
       return;
     }
-
+  
     const submitData = new FormData();
-    Object.keys(formData).forEach(key => {
+    Object.keys(formData).forEach((key) => {
       submitData.append(key, formData[key]);
     });
-
+  
     try {
-      console.log('Signup Data:');
-      console.log('Name:', formData.name);
-      console.log('Email:', formData.email);
-      console.log('Password:', formData.password);
-      console.log('Role:', formData.role);
-      console.log('Photo:', formData.photo ? formData.photo.name : 'No photo uploaded');
+      const response = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        body: submitData,
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert("Account created successfully!");
+        console.log("Signup success:", result);
+        // Redirect to login page or dashboard
+        window.location.href = "/login";
+      } else {
+        alert(result.msg || "Signup failed. Please try again.");
+        console.error("Signup error:", result);
+      }
     } catch (error) {
-      console.error('Signup error:', error);
+      console.error("Signup error:", error);
+      alert("An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
