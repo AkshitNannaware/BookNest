@@ -126,17 +126,18 @@
     gap: 1rem;
     background: rgba(255, 255, 255, 0.8);
     padding: 1rem 2rem;
-    border-radius: 12px;
+    border-radius: 100px;
     z-index: 3;
 }
 
 .advanced-search input,
 .advanced-search .date-picker {
     padding: 0.5rem;
-    border-radius: 8px;
+    border-radius: 100px;
     border: none;
     outline: none;
     font-size: 1rem;
+    background: aliceblue;
 }
 
 .advanced-search button {
@@ -144,7 +145,7 @@
     color: white;
     border: none;
     padding: 0.5rem 1.5rem;
-    border-radius: 8px;
+    border-radius: 50px;
     cursor: pointer;
 }
 .about-lines {
