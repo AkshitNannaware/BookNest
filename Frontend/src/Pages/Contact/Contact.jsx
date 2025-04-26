@@ -15,11 +15,16 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Submitted:', form);
+    alert('Message sent! We’ll get back to you shortly.');
+    setForm({ name: '', email: '', message: '' });
   };
 
   return (
     <div className="contact-container">
-      <h2 className='contactpage'>Contact Us</h2>
+      <h2 className="contactpage">Contact Us</h2>
+      <p className="contact-subtitle">
+        Have questions or need help? Drop us a message!
+      </p>
       <form className="contact-form" onSubmit={handleSubmit}>
         <input
           type="text"

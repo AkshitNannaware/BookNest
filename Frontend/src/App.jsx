@@ -8,12 +8,11 @@ import Applayout from './Components/layout/Applayout';
 import Residencies from './Pages/Residencies/Residencies';
 import Signup from "./Pages/Signup";
 import Login from "./Pages/Login";
-
-import DashboardLayout from './Dashbaord/Layout/DashboardLayout';
-import Overview from './Dashbaord/Pages/Overview';
-import RoomDetails from './Dashbaord/Pages/RoomDetails';
-import Profile from './Dashbaord/Pages/Profile';
 import Contact from './Pages/Contact/Contact';
+import OwnerDashboard from './Dashboard/OwnerDashboard'; // Import the new component
+import AdminDashboard from './Dashboard/AdminDashboard'; // Import the new component
+import DashboardLayout from './Dashboard/Dashboard';
+import StudentDashboard from './Dashboard/StudentDashboard';
 
 const router = createBrowserRouter([
   {
@@ -32,32 +31,35 @@ const router = createBrowserRouter([
         path: "residencies",
         element: <Residencies />,
       },
+      {
+        path: "/signup",
+        element: <Signup />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      // {
+      //   path: "/rented-rooms",
+      //   element: <RentedRooms />, // Add this route
+      // },
+      // {
+      //   path: "/owner-dashboard",
+      //   element: <OwnerDashboard />, // Add this route
+      // },
+      // {
+      //   path: "/admin-dashboard",
+      //   element: <AdminDashboard />, // Add this route
+      // },
     ],
   },
   {
-    path: "/signup",
-    element: <Signup />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/dashboard",
-    element: <DashboardLayout />,
+    path: '/dashboard',
+    element: <DashboardLayout />, // layout with sidebar
     children: [
-      {
-        index: true, // default route for /dashboard
-        element: <Overview />,
-      },
-      {
-        path: "room",
-        element: <RoomDetails />,
-      },
-      {
-        path: "profile",
-        element: <Profile />,
-      },
+      { path: 'admin', element: <AdminDashboard /> },
+      { path: 'owner', element: <OwnerDashboard /> },
+      { path: 'rented', element: <StudentDashboard /> }, 
     ],
   },
 ]);
