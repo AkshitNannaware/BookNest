@@ -1,104 +1,56 @@
 // import bcrypt from 'bcrypt';
 // import jwt from 'jsonwebtoken';
 // import User from '../models/userSchema.js';
-// // import cloudinary from 'cloudinary';
-// import { v2 as cloudinary } from 'cloudinary'; // ✅ Correct import
+// import { v2 as cloudinary } from 'cloudinary';
 
-// // cloudinary.v2.config({
-// //   // cloud_name: 'your-cloud-name',
-// //   // api_key: 'your-api-key',
-// //   // api_secret: 'your-api-secret'
-// //   cloud_name: process.env.CLOUD_NAME,
-// //   api_key: process.env.API_KEY,
-// //   api_secret: process.env.API_SECRET
-// // });
-
+// // Cloudinary configuration
 // cloudinary.config({
 //   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
 //   api_key: process.env.CLOUDINARY_API_KEY,
 //   api_secret: process.env.CLOUDINARY_API_SECRET,
 // });
 
-
-// // cloudinary.uploader.upload('path/to/test-image.jpg', { folder: 'test' })
-// //   .then(result => console.log('Upload successful:', result))
-// //   .catch(err => console.error('Upload failed:', err));
-
-// cloudinary.uploader.upload('path/to/test-image.jpg', { folder: 'test' })
-//   .then(result => console.log('Upload successful:', result))
-//   .catch(err => console.error('Upload failed:', err));
-
 // // Register Controller
 // export const register = async (req, res) => {
 //   try {
-
-//     console.log('Request body:', req.body);
-//     console.log('Uploaded file:', req.file);
-
-
 //     const { username, email, password, role } = req.body;
-//     const file = req.file; // assuming photo comes via form-data
+//     const file = req.file; // from multer middleware
 
-//     // Check if user exists
+//     if (!username || !email || !password || !role || !file) {
+//       return res.status(400).json({ msg: 'All fields including photo are required' });
+//     }
+
+//     // Check if user already exists
 //     const existingUser = await User.findOne({ email });
-//     if (existingUser) return res.status(400).json({ msg: 'User already exists' });
+//     if (existingUser) {
+//       return res.status(400).json({ msg: 'User already exists' });
+//     }
 
-//     // Upload image to Cloudinary
-//     const result = await cloudinary.uploader.upload(file.path, {
-//       folder: 'users'
+//     // Upload photo to Cloudinary
+//     const uploadResult = await cloudinary.uploader.upload(file.path, {
+//       folder: 'users',
 //     });
 
+//     // Hash password
 //     const hashedPassword = await bcrypt.hash(password, 10);
 
-//     const user = await User.create({
+//     // Create user
+//     const user = new User({
 //       username,
 //       email,
 //       password: hashedPassword,
-//       photo: result.secure_url,
-//       role
+//       role,
+//       photo: uploadResult.secure_url, // Save Cloudinary image URL
 //     });
 
-//     res.status(201).json({ msg: 'User registered successfully', user });
-//   } catch (err) {
-//     res.status(500).json({ msg: 'Registration failed', error: err.message });
+//     await user.save();
+
+//     res.status(201).json({ msg: 'User registered successfully' });
+//   } catch (error) {
+//     console.error('Error during registration:', error.message);
+//     res.status(500).json({ msg: 'Registration failed' });
 //   }
 // };
-
-// // Login Controller
-// export const login = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-
-//     const user = await User.findOne({ email });
-//     if (!user) return res.status(404).json({ msg: 'User not found' });
-
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     if (!isMatch) return res.status(401).json({ msg: 'Invalid credentials' });
-
-//     const token = jwt.sign(
-//       { id: user._id, role: user.role },
-//       // 'your_jwt_secret', // store this in env
-//       process.env.JWT_SECRET,
-//       { expiresIn: '7d' }
-//     );
-
-//     res.status(200).json({
-//       msg: 'Login successful',
-//       token,
-//       user: {
-//         id: user._id,
-//         username: user.username,
-//         email: user.email,
-//         role: user.role,
-//         photo: user.photo
-//       }
-//     });
-//   } catch (err) {
-//     res.status(500).json({ msg: 'Login failed', error: err.message });
-//   }
-// };
-
-
 
 
 
@@ -108,59 +60,127 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/userSchema.js';
-import { v2 as cloudinary } from 'cloudinary'; // ✅ Correct import
+import { v2 as cloudinary } from 'cloudinary';
+import userSchema from '../models/userSchema.js';
 
-// ✅ Correct cloudinary config
+// Cloudinary configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// ✅ NO random uploader.upload() here!
-
+// ==========================
 // Register Controller
+// ==========================
 export const register = async (req, res) => {
   try {
-    console.log('Request body:', req.body);
-    console.log('Uploaded file:', req.file);
-
     const { username, email, password, role } = req.body;
-    const file = req.file; // assuming photo comes via form-data
+    const file = req.file; // from multer middleware
 
-    // Check if user exists
+    if (!username || !email || !password || !role || !file) {
+      return res.status(400).json({ msg: 'All fields including photo are required' });
+    }
+
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ msg: 'User already exists' });
+    if (existingUser) {
+      return res.status(400).json({ msg: 'User already exists' });
+    }
 
-    // Upload image to Cloudinary
-    const result = await cloudinary.uploader.upload(file.path, { folder: 'users' });
+    // Upload photo to Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(file.path, {
+      folder: 'users',
+    });
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
+    // Create user
+    const user = new User({
       username,
       email,
       password: hashedPassword,
-      photo: result.secure_url,
-      role
+      role,
+      photo: uploadResult.secure_url, // Save Cloudinary image URL
     });
 
-    res.status(201).json({ msg: 'User registered successfully', user });
-  } catch (err) {
-    res.status(500).json({ msg: 'Registration failed', error: err.message });
+    await user.save();
+
+    res.status(201).json({ msg: 'User registered successfully' });
+  } catch (error) {
+    console.error('Error during registration:', error.message);
+    res.status(500).json({ msg: 'Registration failed' });
   }
 };
 
+// ==========================
 // Login Controller
+// ==========================
+// export const login = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+//     console.log("Login attempt:", { email });
+
+//     // Check if user exists
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//       console.log("User not found");
+//       return res.status(404).json({ msg: 'User not found' });
+//     }
+
+//     // Compare password
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) {
+//       console.log("Invalid credentials");
+//       return res.status(401).json({ msg: 'Invalid credentials' });
+//     }
+//     // Generate JWT token
+//     const token = jwt.sign(
+//       { id: user._id, role: user.role },
+//       process.env.JWT_SECRET,
+//       { expiresIn: '7d' }
+//     );
+
+//     console.log("Login successful");
+//     res.status(200).json({
+//       msg: 'Login successful',
+//       token,
+//       user: {
+//         id: user._id,
+//         username: user.username,
+//         email: user.email,
+//         role: user.role,
+//         photo: user.photo,
+//       },
+//     });
+//   } catch (error) {
+//     console.error('Login error:', error.message);
+//     res.status(500).json({ msg: 'Login failed', error: error.message});
+//   }
+// };
 export const login = async (req, res) => {
   try {
+    console.log("Request body:", req.body); // Debugging log
     const { email, password } = req.body;
 
+    // const user = await userSchema.findOne({email:email, password:password});
+    // console.log("User found:", user); // Debugging log});
+    
+    // if (!user) return res.status(404).json({ msg: 'User not found' });
+
+    // Find user by email
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ msg: 'User not found' });
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    console.log("User found:", user); // Debugging log
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ msg: 'Invalid credentials' });
+    if (!isMatch) {
+      return res.status(401).json({ msg: 'Invalid credentials' });
+    }
+    console.log("Password match:", isMatch); // Debugging log
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
@@ -176,10 +196,12 @@ export const login = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
-        photo: user.photo
-      }
+        photo: user.photo,
+      },
+
     });
-  } catch (err) {
-    res.status(500).json({ msg: 'Login failed', error: err.message });
+  } catch (error) {
+    console.error("Login error:", error.message);
+    res.status(500).json({ msg: 'Login failed', error: error.message });
   }
-}
+};

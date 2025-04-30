@@ -43,11 +43,55 @@ const OwnerDashboard = () => {
     setImages(newImages);
   };
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   // Submit logic goes here (e.g., send formData and images to the server)
+  //   alert('Room Published!');
+  // };
+
+
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit logic goes here (e.g., send formData and images to the server)
-    alert('Room Published!');
+  
+    try {
+      // Create a new FormData object
+      const formData = new FormData();
+      formData.append('ownerId', ownerId); // Assuming ownerId is stored in localStorage
+      formData.append('title', formData.roomType); // Use the correct field
+      formData.append('description', formData.description);
+      formData.append('rent', formData.rent);
+      formData.append('location', `${formData.city}, ${formData.area}`);
+      images.forEach((image, index) => {
+        if (image) formData.append('photos', image); // Add images to FormData
+      });
+  
+      console.log('Form data being sent:', formData);
+  
+      // Send the request to the backend
+      const response = await fetch('http://localhost:5000/api/rooms/upload', {
+        method: 'POST',
+        body: formData,
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert('Room uploaded successfully!');
+        setRooms((prevRooms) => [...prevRooms, result.room]); // Update local state
+      } else {
+        console.error('Error response from server:', result);
+        alert(result.msg || 'Failed to upload room.');
+      }
+    } catch (error) {
+      console.error('Error uploading room:', error);
+      alert('An error occurred. Please try again.');
+    }
   };
+
+
+  
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">

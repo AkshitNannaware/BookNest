@@ -57,8 +57,19 @@ const StudentDashboard = () => {
 
   useEffect(() => {
     const fetchRentedRooms = async () => {
+
+      const userId = localStorage.getItem('userId'); // Get userId from localStorage
+
+    // if (!userId) {
+    //   console.error('User ID is null. Redirecting to login.');
+    //   alert('Please log in to view your rented rooms.');
+    //   window.location.href = '/login'; // Redirect to login page
+    //   return;
+    // }
+
+
       try {
-        const userId = localStorage.getItem('userId'); // Assuming user ID is stored in localStorage
+        // const userId = localStorage.getItem('userId'); // Assuming user ID is stored in localStorage
         const response = await fetch(`http://localhost:5000/api/rooms/rented/${userId}`);
         const data = await response.json();
         setRentedRooms(data);

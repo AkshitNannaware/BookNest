@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Home from './Pages/Home';
 import Applayout from './Components/layout/Applayout';
@@ -13,6 +14,7 @@ import OwnerDashboard from './Dashboard/OwnerDashboard'; // Import the new compo
 import AdminDashboard from './Dashboard/AdminDashboard'; // Import the new component
 import DashboardLayout from './Dashboard/Dashboard';
 import StudentDashboard from './Dashboard/StudentDashboard';
+import BookingForm from './Pages/Booking/Booking';
 
 const router = createBrowserRouter([
   {
@@ -24,11 +26,11 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "contact",
+        path: "/contact",
         element: <Contact />,
       },
       {
-        path: "residencies",
+        path: "/residencies",
         element: <Residencies />,
       },
       {
@@ -38,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+      },
+      {
+        path: "/booking",
+        element: <BookingForm/>
       },
       // {
       //   path: "/rented-rooms",

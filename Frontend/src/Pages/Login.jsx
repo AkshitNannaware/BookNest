@@ -20,6 +20,7 @@ const Login = () => {
 
     if (!formData.email || !formData.password) {
       alert("Please fill in all the fields.");
+      console.log("Login attempt:", formData);
       setLoading(false);
       return;
     }
@@ -46,6 +47,7 @@ const Login = () => {
     });
 
     const result = await response.json();
+    console.log("Backend Response:", result);
 
     if (response.ok) {
       alert("Login successful!");

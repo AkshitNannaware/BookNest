@@ -1,87 +1,148 @@
-import express from 'express';
-import User from '../models/userSchema.js';
-import Room from '../models/roomSchema.js';
+// import express from 'express';
+// import User from '../models/userSchema.js';
+// import Room from '../models/roomSchema.js';
+// import multer from 'multer';
 
-const router = express.Router();
+// const router = express.Router();
 
-// Fetch all users
-router.get('/admin/users', async (req, res) => {
-  try {
-    const users = await User.find().select('-password'); // Exclude passwords
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ msg: 'Failed to fetch users', error: error.message });
-  }
-});
 
-// Fetch all rooms with their owners and renters
-router.get('/admin/rooms', async (req, res) => {
-  try {
-    const rooms = await Room.find()
-      .populate('owner', 'username email')
-      .populate('rentedBy.user', 'username email');
-    res.status(200).json(rooms);
-  } catch (error) {
-    res.status(500).json({ msg: 'Failed to fetch rooms', error: error.message });
-  }
-});
 
-// Fetch rental data (who rented which room)
-router.get('/admin/rentals', async (req, res) => {
-  try {
-    const rentals = await Room.find({ 'rentedBy.0': { $exists: true } }) // Rooms with at least one renter
-      .populate('owner', 'username email')
-      .populate('rentedBy.user', 'username email');
-    res.status(200).json(rentals);
-  } catch (error) {
-    res.status(500).json({ msg: 'Failed to fetch rental data', error: error.message });
-  }
-});
+// const upload = multer({ dest: 'uploads/' });
 
-// Endpoint to upload room data
-router.post('/rooms/upload', async (req, res) => {
-  try {
-    const { ownerId, title, description, rent, location, photos } = req.body;
+// // router.post('/rooms/upload', upload.array('photos', 5), async (req, res) => {
+// //   // Handle room upload logic
+// // });
 
-    const newRoom = new Room({
-      owner: ownerId,
-      title,
-      description,
-      rent,
-      location,
-      photos,
-      rentedBy: [], // Initially no renters
-    });
 
-    await newRoom.save();
-    res.status(201).json({ msg: 'Room uploaded successfully', room: newRoom });
-  } catch (error) {
-    res.status(500).json({ msg: 'Failed to upload room', error: error.message });
-  }
-});
+// router.post('/rooms/upload', upload.array('photos', 5), async (req, res) => {
+//   try {
+//     const { ownerId, title, description, rent, location } = req.body;
 
-// Endpoint to fetch rental history for an owner's rooms
-router.get('/rooms/rental-history/:ownerId', async (req, res) => {
-  try {
-    const { ownerId } = req.params;
+//     if (!ownerId || !title || !description || !rent || !location || !req.files) {
+//       return res.status(400).json({ msg: 'All fields are required' });
+//     }
 
-    const rooms = await Room.find({ owner: ownerId }).populate('rentedBy.user', 'username email');
-    res.status(200).json(rooms);
-  } catch (error) {
-    res.status(500).json({ msg: 'Failed to fetch rental history', error: error.message });
-  }
-});
+//     const photos = req.files.map((file) => file.path);
 
-// Fetch rooms rented by a specific user
-router.get('/rooms/rented/:userId', async (req, res) => {
-  try {
-    const { userId } = req.params;
+//     const newRoom = new Room({
+//       owner: ownerId,
+//       title,
+//       description,
+//       rent,
+//       location,
+//       photos,
+//       rentedBy: [],
+//     });
 
-    const rentedRooms = await Room.find({ 'rentedBy.user': userId }).populate('owner', 'username email');
-    res.status(200).json(rentedRooms);
-  } catch (error) {
-    res.status(500).json({ msg: 'Failed to fetch rented rooms', error: error.message });
-  }
-});
+//     await newRoom.save();
+//     res.status(201).json({ msg: 'Room uploaded successfully', room: newRoom });
+//   } catch (error) {
+//     console.error('Error uploading room:', error);
+//     res.status(500).json({ msg: 'Failed to upload room', error: error.message });
+//   }
+// });
 
-export default router;
+
+
+// // Fetch all users
+// router.get('/admin/users', async (req, res) => {
+//   try {
+//     const users = await User.find().select('-password'); // Exclude passwords
+//     res.status(200).json(users);
+//   } catch (error) {
+//     res.status(500).json({ msg: 'Failed to fetch users', error: error.message });
+//   }
+// });
+
+// // Fetch all rooms with their owners and renters
+// router.get('/admin/rooms', async (req, res) => {
+//   try {
+//     const rooms = await Room.find()
+//       .populate('owner', 'username email')
+//       .populate('rentedBy.user', 'username email');
+//     res.status(200).json(rooms);
+//   } catch (error) {
+//     res.status(500).json({ msg: 'Failed to fetch rooms', error: error.message });
+//   }
+// });
+
+// // Fetch rental data (who rented which room)
+// router.get('/admin/rentals', async (req, res) => {
+//   try {
+//     const rentals = await Room.find({ 'rentedBy.0': { $exists: true } }) // Rooms with at least one renter
+//       .populate('owner', 'username email')
+//       .populate('rentedBy.user', 'username email');
+//     res.status(200).json(rentals);
+//   } catch (error) {
+//     res.status(500).json({ msg: 'Failed to fetch rental data', error: error.message });
+//   }
+// });
+
+// // Endpoint to upload room data
+// router.post('/rooms/upload', async (req, res) => {
+//   try {
+//     console.log('Request body:', req.body);
+
+//     const { ownerId, title, description, rent, location, photos } = req.body;
+     
+//     // Validate required fields
+//     if (!ownerId || !title || !description || !rent || !location || !photos) {
+//       console.log('Validation failed: Missing required fields');
+//       return res.status(400).json({ msg: 'All fields are required' });
+//     }
+
+//     const newRoom = new Room({
+//       owner: ownerId,
+//       title,
+//       description,
+//       rent,
+//       location,
+//       photos,
+//       rentedBy: [], // Initially no renters
+//     });
+
+//     await newRoom.save();
+//     console.log('Room saved successfully:', newRoom);
+
+//     res.status(201).json({ msg: 'Room uploaded successfully', room: newRoom });
+//   } catch (error) {
+//     console.error('Error uploading room:', error);
+//     res.status(500).json({ msg: 'Failed to upload room', error: error.message });
+//   }
+// });
+
+
+// router.get('/rooms', async (req, res) => {
+//   try {
+//     const rooms = await Room.find().populate('owner', 'username email');
+//     res.status(200).json(rooms);
+//   } catch (error) {
+//     res.status(500).json({ msg: 'Failed to fetch rooms', error: error.message });
+//   }
+// });
+
+// // Endpoint to fetch rental history for an owner's rooms
+// router.get('/rooms/rental-history/:ownerId', async (req, res) => {
+//   try {
+//     const { ownerId } = req.params;
+
+//     const rooms = await Room.find({ owner: ownerId }).populate('rentedBy.user', 'username email');
+//     res.status(200).json(rooms);
+//   } catch (error) {
+//     res.status(500).json({ msg: 'Failed to fetch rental history', error: error.message });
+//   }
+// });
+
+// // Fetch rooms rented by a specific user
+// router.get('/rooms/rented/:userId', async (req, res) => {
+//   try {
+//     const { userId } = req.params;
+
+//     const rentedRooms = await Room.find({ 'rentedBy.user': userId }).populate('owner', 'username email');
+//     res.status(200).json(rentedRooms);
+//   } catch (error) {
+//     res.status(500).json({ msg: 'Failed to fetch rented rooms', error: error.message });
+//   }
+// });
+
+// export default router;
