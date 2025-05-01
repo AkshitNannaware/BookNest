@@ -58,7 +58,7 @@ const Login = () => {
       window.location.href = "/dashboard";
     } else {
       alert(result.msg || "Login failed. Please try again.");
-      console.error("Login error:", result);
+      console.error("Login error:", result.msg);
     }
   } catch (error) {
     console.error("Login error:", error);
