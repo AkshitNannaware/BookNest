@@ -65,7 +65,7 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     // Check if user exists
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, role: 'owner' });
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
@@ -78,7 +78,13 @@ export const login = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      // //  { ownerId: user.email },
+      //  { id: user._id, role: user.role },
+      {
+        id: user._id,       // Keep the ID if needed
+        email: user.email,  // Add this line to include email
+        role: user.role     // Optional: role-based access
+      },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -94,6 +100,10 @@ export const login = async (req, res) => {
         photo: user.photo,
       },
     });
+
+    
+    res.json({ token, user: { email: user.email, name: user.name } });
+    // res.json({ token, user: { email: user.email, name: user.name } });
   } catch (error) {
     console.error('Login error:', error.message);
     res.status(500).json({ msg: 'Login failed', error: error.message });

@@ -1,148 +1,162 @@
-// import express from 'express';
-// import User from '../models/userSchema.js';
-// import Room from '../models/roomSchema.js';
-// import multer from 'multer';
+import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import Room from '../models/Room.js';
+import authenticate from '../middlewares/authenticate.js';
 
-// const router = express.Router();
+const router = express.Router();
 
+// Set up Multer for file uploads with additional error handling
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Ensure 'uploads' directory exists
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
 
+// File filter for validating image types
+const fileFilter = (req, file, cb) => {
+  const filetypes = /jpeg|jpg|png|gif/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
 
-// const upload = multer({ dest: 'uploads/' });
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed!'), false);
+  }
+};
 
-// // router.post('/rooms/upload', upload.array('photos', 5), async (req, res) => {
-// //   // Handle room upload logic
-// // });
+// Set limits (file size limit of 5MB for each image)
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: fileFilter,
+});
 
+// POST /api/rooms/upload to upload room data and photos
+router.post('/upload', authenticate, upload.array('photos', 3), async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ msg: "No files uploaded" });
+    }
 
-// router.post('/rooms/upload', upload.array('photos', 5), async (req, res) => {
-//   try {
-//     const { ownerId, title, description, rent, location } = req.body;
+    // const { ownerId, title, description, rent, location, facilities } = req.body;
+    // const photoPaths = req.files.map((file) => `/uploads/${file.filename}`);
+    // const facilityList = Array.isArray(facilities) ? facilities : [facilities];
 
-//     if (!ownerId || !title || !description || !rent || !location || !req.files) {
-//       return res.status(400).json({ msg: 'All fields are required' });
-//     }
+    const ownerId = req.user.id; // ✅ Get owner ID from the token
+    if (!ownerId) {
+      return res.status(401).json({ msg: "Owner ID missing. Please log in again." });
+    }
 
-//     const photos = req.files.map((file) => file.path);
+    const { title, description, rent, location, facilities } = req.body;
+    const photoPaths = req.files.map((file) => `/uploads/${file.filename}`);
+    // const facilityList = Array.isArray(facilities) ? facilities : [facilities];
 
-//     const newRoom = new Room({
-//       owner: ownerId,
-//       title,
-//       description,
-//       rent,
-//       location,
-//       photos,
-//       rentedBy: [],
-//     });
-
-//     await newRoom.save();
-//     res.status(201).json({ msg: 'Room uploaded successfully', room: newRoom });
-//   } catch (error) {
-//     console.error('Error uploading room:', error);
-//     res.status(500).json({ msg: 'Failed to upload room', error: error.message });
-//   }
-// });
-
-
-
-// // Fetch all users
-// router.get('/admin/users', async (req, res) => {
-//   try {
-//     const users = await User.find().select('-password'); // Exclude passwords
-//     res.status(200).json(users);
-//   } catch (error) {
-//     res.status(500).json({ msg: 'Failed to fetch users', error: error.message });
-//   }
-// });
-
-// // Fetch all rooms with their owners and renters
-// router.get('/admin/rooms', async (req, res) => {
-//   try {
-//     const rooms = await Room.find()
-//       .populate('owner', 'username email')
-//       .populate('rentedBy.user', 'username email');
-//     res.status(200).json(rooms);
-//   } catch (error) {
-//     res.status(500).json({ msg: 'Failed to fetch rooms', error: error.message });
-//   }
-// });
-
-// // Fetch rental data (who rented which room)
-// router.get('/admin/rentals', async (req, res) => {
-//   try {
-//     const rentals = await Room.find({ 'rentedBy.0': { $exists: true } }) // Rooms with at least one renter
-//       .populate('owner', 'username email')
-//       .populate('rentedBy.user', 'username email');
-//     res.status(200).json(rentals);
-//   } catch (error) {
-//     res.status(500).json({ msg: 'Failed to fetch rental data', error: error.message });
-//   }
-// });
-
-// // Endpoint to upload room data
-// router.post('/rooms/upload', async (req, res) => {
-//   try {
-//     console.log('Request body:', req.body);
-
-//     const { ownerId, title, description, rent, location, photos } = req.body;
-     
-//     // Validate required fields
-//     if (!ownerId || !title || !description || !rent || !location || !photos) {
-//       console.log('Validation failed: Missing required fields');
-//       return res.status(400).json({ msg: 'All fields are required' });
-//     }
-
-//     const newRoom = new Room({
-//       owner: ownerId,
-//       title,
-//       description,
-//       rent,
-//       location,
-//       photos,
-//       rentedBy: [], // Initially no renters
-//     });
-
-//     await newRoom.save();
-//     console.log('Room saved successfully:', newRoom);
-
-//     res.status(201).json({ msg: 'Room uploaded successfully', room: newRoom });
-//   } catch (error) {
-//     console.error('Error uploading room:', error);
-//     res.status(500).json({ msg: 'Failed to upload room', error: error.message });
-//   }
-// });
+    let facilityList;
+if (Array.isArray(facilities)) {
+  facilityList = facilities;
+} else if (typeof facilities === 'string') {
+  facilityList = facilities.split(',').map(f => f.trim());
+} else {
+  facilityList = [];
+}
 
 
-// router.get('/rooms', async (req, res) => {
-//   try {
-//     const rooms = await Room.find().populate('owner', 'username email');
-//     res.status(200).json(rooms);
-//   } catch (error) {
-//     res.status(500).json({ msg: 'Failed to fetch rooms', error: error.message });
-//   }
-// });
+    const room = new Room({
+      ownerId,
+      title,
+      description,
+      rent,
+      location,
+      // facilities: facilityList,
+      facilities: facilityList,
+      photos: photoPaths,
+    });
 
-// // Endpoint to fetch rental history for an owner's rooms
-// router.get('/rooms/rental-history/:ownerId', async (req, res) => {
-//   try {
-//     const { ownerId } = req.params;
+    const savedRoom = await room.save();
 
-//     const rooms = await Room.find({ owner: ownerId }).populate('rentedBy.user', 'username email');
-//     res.status(200).json(rooms);
-//   } catch (error) {
-//     res.status(500).json({ msg: 'Failed to fetch rental history', error: error.message });
-//   }
-// });
+    res.status(201).json({ msg: 'Room uploaded successfully', room: savedRoom });
+  } catch (err) {
+    console.error('Upload error:', err);
+    if (err.message.includes('Only image files are allowed!')) {
+      res.status(400).json({ msg: 'Invalid file type. Only images are allowed.' });
+    } else if (err.message.includes('File too large')) {
+      res.status(400).json({ msg: 'File size exceeds the 5MB limit.' });
+    } else {
+      res.status(500).json({ msg: 'Server error during upload' });
+    }
+  }
+});
 
-// // Fetch rooms rented by a specific user
-// router.get('/rooms/rented/:userId', async (req, res) => {
-//   try {
-//     const { userId } = req.params;
+// GET /api/rooms/rental-history/:ownerId to fetch rental history of a room owner
+router.get('/rental-history', authenticate, async (req, res) => {
+  try {
+    const ownerId = req.user.id; // Assuming user is added by the authenticate middleware
+    const rooms = await Room.find({ ownerId }).populate('rentedBy.user', 'username email');
+    res.status(200).json({ rooms });
+  } catch (err) {
+    console.error('Fetch error:', err);
+    res.status(500).json({ msg: 'Failed to fetch rooms' });
+  }
+});
 
-//     const rentedRooms = await Room.find({ 'rentedBy.user': userId }).populate('owner', 'username email');
-//     res.status(200).json(rentedRooms);
-//   } catch (error) {
-//     res.status(500).json({ msg: 'Failed to fetch rented rooms', error: error.message });
-//   }
-// });
+// POST /api/rooms to create a new room
+router.post('/', async (req, res) => {
+  try {
+    const { title, location, rent, photos, description, amenities, ownerId } = req.body;
 
-// export default router;
+    const newRoom = new Room({ title, location, rent, photos, description, amenities, ownerId });
+    const savedRoom = await newRoom.save();
+
+    res.status(201).json(savedRoom);
+  } catch (err) {
+    console.error("Error uploading room:", err.message);
+    res.status(500).json({ msg: "Server error during upload" });
+  }
+});
+
+// GET /api/rooms/all to fetch all rooms
+router.get('/all', async (req, res) => {
+  try {
+    const rooms = await Room.find();
+    res.status(200).json({ rooms });
+  } catch (error) {
+    console.error("Error fetching rooms:", error.message);
+    res.status(500).json({ msg: "Server error fetching rooms" });
+  }
+});
+
+// GET /api/rooms/search to filter rooms by location
+router.get('/search', async (req, res) => {
+  try {
+    const { location } = req.query;
+    const query = location ? { location: { $regex: new RegExp(location, 'i') } } : {};
+    const rooms = await Room.find(query);
+    res.status(200).json(rooms);
+  } catch (error) {
+    res.status(500).json({ message: 'Error filtering rooms.' });
+  }
+});
+
+// PUT /api/rooms/:id to update room information by ID
+router.put("/:id", async (req, res) => {
+  try {
+    const updatedRoom = await Room.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+    if (!updatedRoom) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+    res.status(200).json(updatedRoom);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+export default router;

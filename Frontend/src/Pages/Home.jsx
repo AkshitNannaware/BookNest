@@ -1,25 +1,6 @@
-// import React from 'react';
-// import Hero from '../Components/UI/Hero/Hero';
-// import Residencies from './Residencies/Residencies';
-
-
-
-// const Home = () => {
-//   return (
-//     <>
-//      <Hero/>
-//      {/* <Residencies/> */}
-//     </>
-//   )
-// }
-
-// export default Home
-
-
 import React, { useEffect, useState } from "react";
 import Hero from "../Components/UI/Hero/Hero";
 import About from "../Components/UI/About/About";
-import Residencies from "./Residencies/Residencies";
 
 const Home = () => {
   const [residenciesList, setResidenciesList] = useState([]);

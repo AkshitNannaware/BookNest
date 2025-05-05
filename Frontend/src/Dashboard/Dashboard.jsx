@@ -5,7 +5,7 @@ import OwnerDashboard from './OwnerDashboard';
 import StudentDashboard from './StudentDashboard'; // updated import
 
 const Dashboard = () => {
-  const [activePage, setActivePage] = useState('student'); // default to 'student'
+  const [activePage, setActivePage] = useState(''); // default to 'student'
 
   const renderPage = () => {
     switch (activePage) {
@@ -54,7 +54,7 @@ const Dashboard = () => {
           />
         </nav>
         <div className="p-4 border-t border-blue-700 text-sm text-center text-blue-200">
-          &copy; 2025 RoomBookr
+          &copy; 2025 BookNest
         </div>
       </aside>
 

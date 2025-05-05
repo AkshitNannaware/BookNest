@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -19,54 +19,44 @@ const Login = () => {
     setLoading(true);
 
     if (!formData.email || !formData.password) {
-      alert("Please fill in all the fields.");
-      console.log("Login attempt:", formData);
+      alert('Please fill in all the fields.');
       setLoading(false);
       return;
     }
 
-  //   try {
-  //     console.log('Login attempt:', formData);
-  //   } catch (error) {
-  //     console.error('Login error:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-  try {
-    const response = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: formData.email,
-        password: formData.password,
-      }),
-    });
+      const result = await response.json();
+      console.log('Backend Response:', result);
 
-    const result = await response.json();
-    console.log("Backend Response:", result);
-
-    if (response.ok) {
-      alert("Login successful!");
-      console.log("Login success:", result);
-      // Save the token to localStorage or cookies
-      localStorage.setItem("token", result.token);
-      // Redirect to dashboard or homepage
-      window.location.href = "/dashboard";
-    } else {
-      alert(result.msg || "Login failed. Please try again.");
-      console.error("Login error:", result.msg);
+      if (response.ok) {
+        alert('Login successful!');
+        console.log('Login success:', result);
+        // Save the token to localStorage or cookies
+        localStorage.setItem('token', result.token);
+        // Redirect to dashboard or homepage
+        window.location.href = '/dashboard';
+      } else {
+        alert(result.msg || 'Login failed. Please try again.');
+        console.error('Login error:', result.msg);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Login error:", error);
-    alert("An error occurred. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 flex items-center">

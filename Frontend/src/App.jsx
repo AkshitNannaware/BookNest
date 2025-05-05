@@ -15,6 +15,7 @@ import AdminDashboard from './Dashboard/AdminDashboard'; // Import the new compo
 import DashboardLayout from './Dashboard/Dashboard';
 import StudentDashboard from './Dashboard/StudentDashboard';
 import BookingForm from './Pages/Booking/Booking';
+import RoomDetails from './Pages/Residencies/RoomDetails/RoomDetails';
 
 const router = createBrowserRouter([
   {
@@ -45,18 +46,10 @@ const router = createBrowserRouter([
         path: "/booking",
         element: <BookingForm/>
       },
-      // {
-      //   path: "/rented-rooms",
-      //   element: <RentedRooms />, // Add this route
-      // },
-      // {
-      //   path: "/owner-dashboard",
-      //   element: <OwnerDashboard />, // Add this route
-      // },
-      // {
-      //   path: "/admin-dashboard",
-      //   element: <AdminDashboard />, // Add this route
-      // },
+      {
+        path:"/room-details/:id",
+        element: <RoomDetails/>
+      },
     ],
   },
   {
@@ -71,7 +64,9 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+  <RouterProvider router={router} />    
+  );
 };
 
 export default App;

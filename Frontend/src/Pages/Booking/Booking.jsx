@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import "./Booking.css";
-import { useLocation } from "react-router-dom";
 
 const BookingForm = ({ roomId, roomName, roomPrice }) => {
-
-  const location = useLocation();
-  const { room } = location.state || {}; // Retrieve room details
-
-
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [userDetails, setUserDetails] = useState({
@@ -21,10 +15,7 @@ const BookingForm = ({ roomId, roomName, roomPrice }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === 'name' || name === 'email') {
-      setUserDetails({
-        ...userDetails,
-        [name]: value,
-      });
+      setUserDetails({ ...userDetails, [name]: value });
     } else {
       if (name === 'startDate') setStartDate(value);
       if (name === 'endDate') setEndDate(value);
@@ -35,21 +26,20 @@ const BookingForm = ({ roomId, roomName, roomPrice }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate form
     if (!startDate || !endDate || !userDetails.name || !userDetails.email) {
       setError("Please fill in all fields.");
       return;
     }
-    
-    // Create booking data
+
     const bookingData = {
       roomId,
-      userId: "dummyUserId",  // Replace with actual user ID
+      userId: "dummyUserId", // Replace with actual user ID
+      name: userDetails.name,
+      email: userDetails.email,
       startDate,
       endDate,
     };
 
-    // Send booking request to backend
     try {
       const response = await fetch('http://localhost:5000/api/book-room', {
         method: 'POST',
@@ -76,9 +66,8 @@ const BookingForm = ({ roomId, roomName, roomPrice }) => {
   return (
     <section className="booking-form-section">
       <div className="booking-form-container">
-        <h2 className="form-title">Book Your Stay at {room?.name}</h2>
-        <p className="room-price">Price: {room?.price}</p>
-        {/* Booking form fields */}
+        <h2 className="form-title">Book Your Stay at {roomName}</h2>
+        <p className="room-price">Price: ₹{roomPrice}</p>
 
         <form onSubmit={handleSubmit} className="booking-form">
           <div className="form-group">

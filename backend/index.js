@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
+import roomRoutes from './routes/roomRoutes.js';
 
 dotenv.config();
 
@@ -11,9 +12,13 @@ const app = express();
 // Middleware to parse JSON requests
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // For form data
+app.use('/uploads', express.static('uploads')); // Serve image files
 
+// Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/rooms', roomRoutes);
+
+
 
 // Environment variables
 const PORT = process.env.PORT || 5001;

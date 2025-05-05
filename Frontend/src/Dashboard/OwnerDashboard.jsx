@@ -1,39 +1,78 @@
 import React, { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 const OwnerDashboard = () => {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [images, setImages] = useState([null, null, null]); // For storing room images
+  const [images, setImages] = useState([null, null, null]);
   const [formData, setFormData] = useState({
     city: '',
     area: '',
-    roomType: 'Single Room',
+    address: '',
+    roomType: '',
     rent: '',
     description: '',
+    facilities: [],
   });
 
-  const ownerId = localStorage.getItem('ownerId');
+  const [token, setToken] = useState('');
+  const [ownerId, setOwnerId] = useState('');
+
+useEffect(() => {
+  const storedToken = localStorage.getItem('token');
+  if (storedToken) {
+    setToken(storedToken);
+    try {
+      const decoded = jwtDecode(storedToken);
+      console.log("Decoded token:", decoded);
+      setOwnerId(decoded?.email); // Use email as ownerId
+    } catch (err) {
+      console.error('Invalid token:', err);
+    }
+  }
+}, []);
+
 
   useEffect(() => {
     const fetchRentalHistory = async () => {
+      if (!token) {
+        alert('You must be logged in to view your rooms.');
+        return;
+      }
+
       try {
-        const response = await fetch(`http://localhost:5000/api/rooms/rental-history/${ownerId}`);
+        const response = await fetch('http://localhost:5000/api/rooms/rental-history', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
-        setRooms(data);
+
+        if (response.ok) {
+          setRooms(data.rooms);
+        } else {
+          alert(data.msg || 'Failed to fetch rooms.');
+        }
       } catch (error) {
         console.error('Error fetching rental history:', error);
       } finally {
         setLoading(false);
       }
     };
+     
+    if (token) {
+      fetchRentalHistory();
+    }
 
-    fetchRentalHistory();
-  }, [ownerId]);
+  }, [token]);
 
   const handleImageUpload = (e, index) => {
     const file = e.target.files[0];
+    if (!file) return;
+
     const newImages = [...images];
-    newImages[index] = URL.createObjectURL(file);
+    newImages[index] = file;
     setImages(newImages);
   };
 
@@ -43,45 +82,42 @@ const OwnerDashboard = () => {
     setImages(newImages);
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Submit logic goes here (e.g., send formData and images to the server)
-  //   alert('Room Published!');
-  // };
-
-
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    if (!token || !ownerId) {
+      alert('Authentication failed. Please log in again.');
+      return;
+    }
+
     try {
-      // Create a new FormData object
-      const formData = new FormData();
-      formData.append('ownerId', ownerId); // Assuming ownerId is stored in localStorage
-      formData.append('title', formData.roomType); // Use the correct field
-      formData.append('description', formData.description);
-      formData.append('rent', formData.rent);
-      formData.append('location', `${formData.city}, ${formData.area}`);
-      images.forEach((image, index) => {
-        if (image) formData.append('photos', image); // Add images to FormData
+      const uploadData = new FormData();
+      uploadData.append('ownerId', ownerId);
+      uploadData.append('title', formData.roomType);
+      uploadData.append('description', formData.description);
+      uploadData.append('rent', formData.rent);
+      uploadData.append('location', `${formData.city}, ${formData.area}, ${formData.address}`);
+      uploadData.append('facilities', JSON.stringify(formData.facilities));
+
+      // Loop through images and append them to FormData
+      images.forEach((image) => {
+        if (image) uploadData.append('photos', image);
       });
-  
-      console.log('Form data being sent:', formData);
-  
-      // Send the request to the backend
+
       const response = await fetch('http://localhost:5000/api/rooms/upload', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: uploadData,
       });
-  
+
       const result = await response.json();
-  
+
       if (response.ok) {
         alert('Room uploaded successfully!');
-        setRooms((prevRooms) => [...prevRooms, result.room]); // Update local state
+        // Optionally, update rooms or redirect here
       } else {
-        console.error('Error response from server:', result);
         alert(result.msg || 'Failed to upload room.');
       }
     } catch (error) {
@@ -90,15 +126,12 @@ const OwnerDashboard = () => {
     }
   };
 
-
-  
-
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: Form */}
         <div className="bg-white p-6 rounded-xl shadow-md">
-          <h1 className="text-3xl font-bold mb-8">Room Details</h1>
+          <h1 className="text-3xl font-bold mb-8">Room Upload</h1>
 
           <form onSubmit={handleSubmit}>
             <div className="space-y-6">
@@ -117,7 +150,7 @@ const OwnerDashboard = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Area/Locality</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Area</label>
                     <input
                       type="text"
                       className="w-full p-2 border rounded-md"
@@ -126,7 +159,32 @@ const OwnerDashboard = () => {
                       onChange={(e) => setFormData({ ...formData, area: e.target.value })}
                     />
                   </div>
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Location / Address</label>
+                    <input
+                      type="text"
+                      className="w-full p-2 border rounded-md"
+                      placeholder="Full address"
+                      value={formData.address}
+                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    />
+                  </div>
                 </div>
+                {/* Google Map Embed */}
+                {formData.address && (
+                  <div className="mt-4">
+                    <iframe
+                      width="100%"
+                      height="250"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      allowFullScreen
+                      src={`https://www.google.com/maps?q=${encodeURIComponent(
+                        `${formData.city}, ${formData.area}, ${formData.address}`
+                      )}&output=embed`}
+                    ></iframe>
+                  </div>
+                )}
               </div>
 
               {/* Room Information Section */}
@@ -140,9 +198,10 @@ const OwnerDashboard = () => {
                       value={formData.roomType}
                       onChange={(e) => setFormData({ ...formData, roomType: e.target.value })}
                     >
-                      <option>Single Room</option>
-                      <option>Double Room</option>
-                      <option>Studio Apartment</option>
+                      <option value="">Select room type</option>
+                      <option>1 BHK</option>
+                      <option>2 BHK</option>
+                      <option>Hostel</option>
                     </select>
                   </div>
                   <div>
@@ -155,6 +214,18 @@ const OwnerDashboard = () => {
                       onChange={(e) => setFormData({ ...formData, rent: e.target.value })}
                     />
                   </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Facilities</label>
+                    <textarea
+                      className="w-full p-2 border rounded-md"
+                      rows={3}
+                      placeholder="Mention facilities like WiFi, AC, attached bathroom, etc."
+                      value={formData.facilities.join(', ')} // Display as comma-separated string
+                      onChange={(e) => setFormData({ ...formData, facilities: e.target.value.split(',') })}
+                    />
+                  </div>
+
                   <div className="sm:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                     <textarea
@@ -173,17 +244,10 @@ const OwnerDashboard = () => {
                 <h2 className="text-xl font-semibold mb-4">Room Photos</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {images.map((image, index) => (
-                    <div
-                      key={index}
-                      className="border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center"
-                    >
+                    <div key={index} className="border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center">
                       {image ? (
                         <div className="relative w-full h-40">
-                          <img
-                            src={image}
-                            alt={`Room ${index + 1}`}
-                            className="w-full h-full object-cover rounded-lg"
-                          />
+                          <img src={URL.createObjectURL(image)} alt={`Room ${index + 1}`} className="w-full h-full object-cover rounded-lg" />
                           <button
                             type="button"
                             onClick={() => removeImage(index)}
@@ -227,30 +291,13 @@ const OwnerDashboard = () => {
             <p className="text-gray-500">No rooms uploaded yet.</p>
           ) : (
             <div className="space-y-4">
-              {rooms.map((room) => (
-                <div key={room._id} className="bg-white p-4 rounded-xl shadow">
-                  <h3 className="text-xl font-semibold mb-2">{room.title}</h3>
-                  <img
-                    src={room.photos}
-                    alt={room.title}
-                    className="w-full h-40 object-cover rounded mb-2"
-                  />
-                  <p className="text-gray-700">{room.description}</p>
-                  <p><strong>Rent:</strong> ₹{room.rent}</p>
-                  <p><strong>Location:</strong> {room.location}</p>
+              {rooms.map((room, index) => (
+                <div key={index} className="border-b-2 pb-4">
+                  <h3 className="font-semibold text-lg">{room.title}</h3>
+                  <p className="text-sm text-gray-600">{room.location}</p>
+                  <p className="mt-2">{room.description}</p>
                   <div className="mt-2">
-                    <p className="font-medium">Rented By:</p>
-                    {room.rentedBy.length > 0 ? (
-                      <ul className="list-disc pl-5">
-                        {room.rentedBy.map((rental) => (
-                          <li key={rental._id}>
-                            {rental.user.username} ({rental.user.email})
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-sm text-gray-500">Not rented yet</p>
-                    )}
+                    <strong>Rent:</strong> ₹{room.rent}/month
                   </div>
                 </div>
               ))}
