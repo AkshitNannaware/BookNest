@@ -63,9 +63,11 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("Received email:", email); // Debug log
 
     // Check if user exists
-    const user = await User.findOne({ email, role: 'owner' });
+    // const user = await User.findOne({ email, role: 'email' });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
@@ -73,7 +75,7 @@ export const login = async (req, res) => {
     // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ msg: 'Invalid credentials' });
+      return res.status(401).json({ msg: 'password do not match' });
     }
 
     // Generate JWT token
@@ -102,7 +104,7 @@ export const login = async (req, res) => {
     });
 
     
-    res.json({ token, user: { email: user.email, name: user.name } });
+    // res.json({ token, user: { email: user.email, name: user.name } });
     // res.json({ token, user: { email: user.email, name: user.name } });
   } catch (error) {
     console.error('Login error:', error.message);

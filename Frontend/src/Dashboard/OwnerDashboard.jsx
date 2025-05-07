@@ -17,6 +17,7 @@ const OwnerDashboard = () => {
 
   const [token, setToken] = useState('');
   const [ownerId, setOwnerId] = useState('');
+  const [userRole, setUserRole] = useState('');  // Store user role
 
 useEffect(() => {
   const storedToken = localStorage.getItem('token');
@@ -26,6 +27,7 @@ useEffect(() => {
       const decoded = jwtDecode(storedToken);
       console.log("Decoded token:", decoded);
       setOwnerId(decoded?.email); // Use email as ownerId
+      setUserRole(decoded?.role); // Store the user's role (owner, admin, etc.)
     } catch (err) {
       console.error('Invalid token:', err);
     }
@@ -35,8 +37,8 @@ useEffect(() => {
 
   useEffect(() => {
     const fetchRentalHistory = async () => {
-      if (!token) {
-        alert('You must be logged in to view your rooms.');
+      if (!token || (userRole !== 'owner' && userRole !== 'admin')) {
+        alert('You must be logged in as an owner or admin to upload and view uploaded rooms.');
         return;
       }
 
@@ -65,7 +67,7 @@ useEffect(() => {
       fetchRentalHistory();
     }
 
-  }, [token]);
+  }, [token,  userRole]);
 
   const handleImageUpload = (e, index) => {
     const file = e.target.files[0];
@@ -133,6 +135,8 @@ useEffect(() => {
         <div className="bg-white p-6 rounded-xl shadow-md">
           <h1 className="text-3xl font-bold mb-8">Room Upload</h1>
 
+          {/* Only allow owners and admins to upload rooms */}
+          {(userRole === 'owner' || userRole === 'admin') ? (
           <form onSubmit={handleSubmit}>
             <div className="space-y-6">
               {/* Location Section */}
@@ -280,28 +284,37 @@ useEffect(() => {
               </button>
             </div>
           </form>
+           ) : (
+            <p className="text-red-500">You do not have permission to upload a room.</p>
+          )}
         </div>
 
         {/* Right: Rental History */}
         <div className="bg-white p-6 rounded-xl shadow-md">
           <h2 className="text-2xl font-bold mb-4">Your Uploaded Rooms</h2>
-          {loading ? (
-            <p>Loading...</p>
-          ) : rooms.length === 0 ? (
-            <p className="text-gray-500">No rooms uploaded yet.</p>
-          ) : (
-            <div className="space-y-4">
-              {rooms.map((room, index) => (
-                <div key={index} className="border-b-2 pb-4">
-                  <h3 className="font-semibold text-lg">{room.title}</h3>
-                  <p className="text-sm text-gray-600">{room.location}</p>
-                  <p className="mt-2">{room.description}</p>
-                  <div className="mt-2">
-                    <strong>Rent:</strong> ₹{room.rent}/month
+          
+          {/* Only allow owners and admins to view uploaded rooms */}
+          {(userRole === 'owner' || userRole === 'admin') ? (
+            loading ? (
+              <p>Loading...</p>
+            ) : rooms.length === 0 ? (
+              <p className="text-gray-500">No rooms uploaded yet.</p>
+            ) : (
+              <div className="space-y-4">
+                {rooms.map((room, index) => (
+                  <div key={index} className="border-b-2 pb-4">
+                    <h3 className="font-semibold text-lg">{room.title}</h3>
+                    <p className="text-sm text-gray-600">{room.location}</p>
+                    <p className="mt-2">{room.description}</p>
+                    <div className="mt-2">
+                      <strong>Rent:</strong> ₹{room.rent}/month
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )
+          ) : (
+            <p className="text-red-500">You do not have permission to view uploaded rooms.</p>
           )}
         </div>
       </div>

@@ -10,6 +10,10 @@ const rentedBySchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  rentedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },  
 });
 
 const roomSchema = new mongoose.Schema({
@@ -37,6 +41,10 @@ const roomSchema = new mongoose.Schema({
   },
   photos: [String], // Store URLs or file paths for room photos
   rentedBy: [rentedBySchema], // Keep track of renters and rental dates
+
+  isBooked: { type: Boolean, default: false }, // isBooked field
+
+  
 }, { timestamps: true });
 
 const Room = mongoose.model('Room', roomSchema);

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -30,10 +32,7 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
@@ -41,11 +40,8 @@ const Login = () => {
 
       if (response.ok) {
         alert('Login successful!');
-        console.log('Login success:', result);
-        // Save the token to localStorage or cookies
         localStorage.setItem('token', result.token);
-        // Redirect to dashboard or homepage
-        window.location.href = '/dashboard';
+        navigate('/');
       } else {
         alert(result.msg || 'Login failed. Please try again.');
         console.error('Login error:', result.msg);
@@ -70,9 +66,7 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <input
@@ -90,13 +84,8 @@ const Login = () => {
             {/* Password Input */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <Link
-                  to="/forgot-password"
-                  className="text-sm text-blue-500 hover:text-blue-600 font-medium"
-                >
+                <label className="block text-sm font-medium text-gray-700">Password</label>
+                <Link to="/forgot-password" className="text-sm text-blue-500 hover:text-blue-600 font-medium">
                   Forgot password?
                 </Link>
               </div>
@@ -116,11 +105,7 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
             </div>
@@ -157,10 +142,7 @@ const Login = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
-              <Link
-                to="/signup"
-                className="text-blue-500 hover:text-blue-600 font-medium"
-              >
+              <Link to="/signup" className="text-blue-500 hover:text-blue-600 font-medium">
                 Sign up
               </Link>
             </p>

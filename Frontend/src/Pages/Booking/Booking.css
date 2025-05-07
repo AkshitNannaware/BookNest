@@ -40,6 +40,7 @@
   .form-group label {
     font-size: 14px;
     font-weight: 500;
+    margin-right: 10px;
   }
   
   .form-group input {
@@ -77,4 +78,99 @@
     font-size: 14px;
     text-align: center;
   }
+  .radio-toggle-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
   
+  .toggle-option {
+    padding: 8px 16px;
+    border: 2px solid #ccc;
+    border-radius: 25px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    user-select: none;
+    transition: all 0.3s ease;
+  }
+  
+  .toggle-option input {
+    display: none;
+  }
+  
+  .toggle-option.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+  
+  .styled-select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    background-color: white;
+  }
+  .room-info, .booking-instructions, .support-section {
+    margin-bottom: 20px;
+    background-color: #f8f8f8;
+    padding: 15px 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .room-info h3, .booking-instructions h3, .support-section h4 {
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .room-info ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .room-info li {
+    margin-bottom: 6px;
+  }
+  
+  .support-section a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .radio-toggle-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  
+  .toggle-option {
+    padding: 8px 16px;
+    border: 2px solid #ccc;
+    border-radius: 25px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    user-select: none;
+    transition: all 0.3s ease;
+  }
+  
+  .toggle-option input {
+    display: none;
+  }
+  
+  .toggle-option.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+  
+  .styled-select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    background-color: white;
+  }  
+  .booking-instructions{
+    margin-top: 20px;
+  }

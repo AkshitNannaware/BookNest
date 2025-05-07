@@ -1,13 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { IoReorderThreeOutline } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
-import "react-datepicker/dist/react-datepicker.css";
+import { jwtDecode } from 'jwt-decode';
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [userEmail, setUserEmail] = useState(null);
+  const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
-  const dropdownRef = useRef(null); 
+  // 🔍 Check login state and extract email from token
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUserEmail(decoded.email); // ✅ set email from token
+      } catch (err) {
+        console.error("Invalid token", err);
+        setUserEmail(null);
+      }
+    } else {
+      setUserEmail(null);
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -15,20 +32,18 @@ const Header = () => {
         setShowDropdown(false);
       }
     };
-
     document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
+    return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
+  const toggleDropdown = () => setShowDropdown(!showDropdown);
 
-  const closeDropdown = () => {
-    setShowDropdown(false);
+  const closeDropdown = () => setShowDropdown(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUserEmail(null);
+    navigate('/');
   };
 
   return (
@@ -54,9 +69,18 @@ const Header = () => {
             </div>
             {showDropdown && (
               <ul className="dropdown-list">
-                <li><NavLink to="/Login" onClick={closeDropdown}>Login</NavLink></li>
-                <li><NavLink to="/Signup" onClick={closeDropdown}>Sign Up</NavLink></li>
-                <li><NavLink to="/Dashboard" onClick={closeDropdown}>Dashboard</NavLink></li>
+                {!userEmail ? (
+                  <>
+                    <li><NavLink to="/Login" onClick={closeDropdown}>Login</NavLink></li>
+                    <li><NavLink to="/Signup" onClick={closeDropdown}>Sign Up</NavLink></li>
+                  </>
+                ) : (
+                  <>
+                    <li className="username">{userEmail.split('@')[0]}</li>
+                    <li><NavLink to="/Dashboard" onClick={closeDropdown}>Dashboard</NavLink></li>
+                    <li><button onClick={handleLogout} className="logout-btn">Logout</button></li>
+                  </>
+                )}
               </ul>
             )}
           </div>
