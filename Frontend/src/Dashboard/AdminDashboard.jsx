@@ -1,61 +1,63 @@
 import React, { useEffect, useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 const AdminDashboard = () => {
-  const [users, setUsers] = useState([]);
-  const [rooms, setRooms] = useState([]);
-  const [rentals, setRentals] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [owners, setOwners] = useState([]);
+  const [messages, setMessages] = useState([]); // State for contact messages
   const [loading, setLoading] = useState(true);
+  const [accessDenied, setAccessDenied] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/login';
+      return;
+    }
+
+    const decoded = jwtDecode(token);
+    const role = decoded?.role;
+
+    if (role !== 'admin') {
+      setAccessDenied(true);
+      setLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
       try {
-        // Simulating fake data (replace with actual fetch if needed)
-        const usersData = [
-          { _id: 'u1', username: 'john_doe', email: 'john@example.com', role: 'student' },
-          { _id: 'u2', username: 'owner123', email: 'owner@example.com', role: 'owner' },
-          { _id: 'u3', username: 'admin', email: 'admin@example.com', role: 'admin' },
-        ];
-
-        const roomsData = [
-          {
-            _id: 'r1',
-            title: 'Cozy Single Room',
-            owner: { username: 'owner123' },
-            rent: 5000,
-            location: 'Indore',
-            available: true,
+        // Fetch students data
+        const studentsRes = await fetch('http://localhost:5000/api/admin/students', {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-          {
-            _id: 'r2',
-            title: 'Spacious Double Room',
-            owner: { username: 'owner123' },
-            rent: 8000,
-            location: 'Pune',
-            available: false,
-          },
-        ];
+        });
 
-        const rentalsData = [
-          {
-            _id: 'r1',
-            title: 'Cozy Single Room',
-            owner: { username: 'owner123' },
-            rentedBy: [
-              {
-                _id: 'rent1',
-                user: { username: 'john_doe' },
-                rentedAt: new Date().toISOString(),
-              },
-            ],
+        // Fetch owners data
+        const ownersRes = await fetch('http://localhost:5000/api/admin/owners', {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        ];
+        });
 
-        // Set mock data
-        setUsers(usersData);
-        setRooms(roomsData);
-        setRentals(rentalsData);
-      } catch (error) {
-        console.error('Error fetching admin data:', error);
+        // Fetch contact messages
+        const messagesRes = await fetch('http://localhost:5000/api/admin/messages', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const studentsData = await studentsRes.json();
+        const ownersData = await ownersRes.json();
+        const messagesData = await messagesRes.json();
+
+        console.log("Fetched Owners Data:", ownersData); // Log owners data to debug
+
+        setStudents(studentsData);
+        setOwners(ownersData);
+        setMessages(messagesData); // Set contact messages data
+      } catch (err) {
+        console.error('Error fetching admin data:', err);
       } finally {
         setLoading(false);
       }
@@ -64,92 +66,105 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
-  if (loading) {
-    return <p className="text-center mt-4">Loading...</p>;
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = '/login';
+  };
+
+  if (loading) return <p className="text-center mt-10">Loading...</p>;
+
+  if (accessDenied) {
+    return (
+      <div className="text-center mt-10 text-red-600 font-semibold text-xl">
+        You do not have permission to view this dashboard.
+      </div>
+    );
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h2 className="text-3xl font-bold mb-6">Admin Dashboard</h2>
-
-      {/* Users Section */}
-      <section className="mb-8">
-        <h3 className="text-xl font-semibold mb-2">All Users</h3>
-        <table className="min-w-full bg-white rounded-lg shadow overflow-hidden">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="py-2 px-4 text-left">Username</th>
-              <th className="py-2 px-4 text-left">Email</th>
-              <th className="py-2 px-4 text-left">Role</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user._id} className="border-b">
-                <td className="py-2 px-4">{user.username}</td>
-                <td className="py-2 px-4">{user.email}</td>
-                <td className="py-2 px-4 capitalize">{user.role}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-
-      {/* Rooms Section */}
-      <section className="mb-8">
-        <h3 className="text-xl font-semibold mb-2">All Rooms</h3>
-        <table className="min-w-full bg-white rounded-lg shadow overflow-hidden">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="py-2 px-4 text-left">Title</th>
-              <th className="py-2 px-4 text-left">Owner</th>
-              <th className="py-2 px-4 text-left">Rent</th>
-              <th className="py-2 px-4 text-left">Location</th>
-              <th className="py-2 px-4 text-left">Available</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rooms.map((room) => (
-              <tr key={room._id} className="border-b">
-                <td className="py-2 px-4">{room.title}</td>
-                <td className="py-2 px-4">{room.owner?.username || 'N/A'}</td>
-                <td className="py-2 px-4">₹{room.rent}</td>
-                <td className="py-2 px-4">{room.location}</td>
-                <td className="py-2 px-4">{room.available ? 'Yes' : 'No'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-
-      {/* Rentals Section */}
-      <section>
-        <h3 className="text-xl font-semibold mb-2">Rental Data</h3>
-        <table className="min-w-full bg-white rounded-lg shadow overflow-hidden">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="py-2 px-4 text-left">Room</th>
-              <th className="py-2 px-4 text-left">Owner</th>
-              <th className="py-2 px-4 text-left">Rented By</th>
-              <th className="py-2 px-4 text-left">Rented At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rentals.map((room) =>
-              room.rentedBy.map((rental) => (
-                <tr key={rental._id} className="border-b">
-                  <td className="py-2 px-4">{room.title}</td>
-                  <td className="py-2 px-4">{room.owner?.username || 'N/A'}</td>
-                  <td className="py-2 px-4">{rental.user?.username || 'N/A'}</td>
-                  <td className="py-2 px-4">
-                    {new Date(rental.rentedAt).toLocaleDateString()}
-                  </td>
+    <div className="admin-dashboard">
+      <main className="dashboard">
+        {/* Students Section */}
+        <section className="section">
+          <h2 className="text-3xl font-bold mb-8">All Students</h2>
+          <div className="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  {/* <th>Phone</th> */}
+                  <th>Total Bookings</th>
+                  <th>Last Booking Date</th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </section>
+              </thead>
+              <tbody>
+                {students.map((student, index) => (
+                  <tr key={index}>
+                    <td>{student.email}</td>
+                    {/* <td>{student.phone || 'N/A'}</td> */}
+                    <td>{student.totalBookings}</td>
+                    <td>{student.lastBookingDate || 'N/A'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Owners Section */}
+        <section className="section">
+          <h2 className="text-3xl font-bold mb-8">All Owners</h2>
+          <div className="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  {/* <th>Mobile</th> */}
+                  <th>Last Upload</th>
+                  <th>Total Earnings</th>
+                </tr>
+              </thead>
+              <tbody>
+                {owners.map((owner, index) => (
+                  <tr key={index}>
+                    <td>{owner.email}</td>
+                    {/* <td>{owner.mobile || 'N/A'}</td> */}
+                    <td>{owner.lastUpload ? new Date(owner.lastUpload).toLocaleString() : 'N/A'}</td>
+                    <td>{owner.totalEarnings}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Contact Messages Section */}
+        <section className="section">
+          <h2 className="text-3xl font-bold mb-8">Contact Messages</h2>
+          <div className="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Message</th>
+                  <th>Sent At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {messages.map((message, index) => (
+                  <tr key={index}>
+                    <td>{message.name}</td>
+                    <td>{message.email}</td>
+                    <td>{message.message}</td>
+                    <td>{new Date(message.createdAt).toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
     </div>
   );
 };

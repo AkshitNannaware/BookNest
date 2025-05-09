@@ -1,0 +1,142 @@
+.logout-button {
+    background-color: #ff4d4f;
+    color: white;
+    font-weight: 500;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    width: 90%;
+    margin: 5px auto 0 auto;
+    display: block;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+  }
+    
+  .logout-button:hover {
+    background-color: #e63946;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  p.textbrand {
+    font-weight: 500;
+    color: #1f3e72;
+    margin-top: 6px;
+    font-size: 25px;
+    margin-left: 4px;
+  }
+  
+  .img.brand {
+    height: 79px;
+    width: 111px;
+    margin-top: 4px;
+    margin-left: 50px;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 50px;
+    background-color: aliceblue;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .logo img.brand {
+    width: 100px;
+    height: 43px;
+    border-radius: 5px;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    font-size: 23px;
+    font-family: math;
+    margin-top: 10px;
+  }
+  
+  .nav {
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+  }
+  
+  .nav:hover {
+    color: #007BFF;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .navbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  
+    .nav-links {
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 18px;
+      margin-top: 0;
+    }
+  
+    .dropdown-list {
+      right: auto;
+      left: 0;
+    }
+  }
+  
+  .icon-button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: black;
+  }
+  
+  .user-menu {
+    position: relative;
+  }
+  
+  .dropdown-list {
+    position: absolute;
+    top: 40px;
+    right: -40px;
+    list-style: none;
+    background-color: white;
+    padding: 10px 0;
+    margin: 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    z-index: 999;
+    width: 160px;
+    color: black;
+  }
+  
+  .dropdown-list li {
+    padding: 10px 15px;
+    font-size: 18px;
+  }
+  
+  .dropdown-list li:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .dropdown-list a {
+    color: black;
+    text-decoration: none;
+    display: block;
+    font-size: 17px;
+  }
+  
+  .react-datepicker__portal {
+    z-index: 99999 !important;
+    position: absolute;
+  }
+  

@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LayoutDashboard, Home, Building2 } from 'lucide-react';
 import AdminDashboard from './AdminDashboard';
 import OwnerDashboard from './OwnerDashboard';
-import StudentDashboard from './StudentDashboard'; // updated import
+import StudentDashboard from './StudentDashboard';
 
 const Dashboard = () => {
-  const [activePage, setActivePage] = useState(''); // default to 'student'
+  const [activePage, setActivePage] = useState('');
+
+  // Set default dashboard page based on user role
+  useEffect(() => {
+    const role = localStorage.getItem('userRole');
+    if (role === 'admin') {
+      setActivePage('admin');
+    } else if (role === 'owner') {
+      setActivePage('owner');
+    } else {
+      setActivePage('student');
+    }
+  }, []);
 
   const renderPage = () => {
     switch (activePage) {
@@ -31,7 +43,7 @@ const Dashboard = () => {
       {/* Sidebar */}
       <aside className="w-64 bg-blue-900 text-white flex flex-col">
         <div className="p-6 text-3xl font-bold border-b border-blue-700">
-          DashBoard
+          Dashboard
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <SidebarItem

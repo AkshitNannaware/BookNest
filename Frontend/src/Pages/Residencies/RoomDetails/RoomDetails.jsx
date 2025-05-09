@@ -33,13 +33,29 @@ const RoomDetails = () => {
   if (error) return <p className="error-message">{error}</p>;
   if (!room) return <p>Loading room details...</p>;
 
+  const getImageSrc = (photos) => {
+    if (Array.isArray(photos) && photos.length > 0) {
+      const imageUrl = photos[0];
+      if (imageUrl.startsWith("/uploads")) {
+        return `http://localhost:5000${imageUrl}`; // Local image
+      } else if (imageUrl.startsWith("http")) {
+        return imageUrl; // External URL
+      }
+    }
+    return "https://via.placeholder.com/300x200?text=No+Image+Available"; // Fallback
+  };
+
   return (
     <div className="room-details-container">
       <h1 className="room-title">{room.title}</h1>
       <img
-        src={room.photos?.[0] || "/default-placeholder.jpg"}
+        src={getImageSrc(room.photos)}
         alt={room.title}
         className="room-image"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "https://via.placeholder.com/300x200?text=No+Image+Available"; // Fallback if error
+        }}
       />
       <p className="room-location">
         <strong>Location:</strong> {room.location}
@@ -47,17 +63,18 @@ const RoomDetails = () => {
       <p className="room-rent">
         <strong>Rent:</strong> ₹{room.rent}
       </p>
+      <p className="room-mobile">
+        <strong>Owner Mobile:</strong> {room.mobile || "Not provided"}
+      </p>
       <p className="room-description">
         <strong>Description:</strong> {room.description || "No description available."}
       </p>
-     <p className="room-facilities">
-  <strong>Facilities:</strong> 
-  {room.facilities && room.facilities.length > 0 
-    ? room.facilities.join(", ") 
-    : "No facilities listed."}
-</p>
-
-
+      <p className="room-facilities">
+        <strong>Facilities:</strong>
+        {room.facilities && room.facilities.length > 0
+          ? room.facilities.join(", ")
+          : "No facilities listed."}
+      </p>
 
       <button className="book-now-btn" onClick={() => setShowBookingForm(true)}>
         Book Now

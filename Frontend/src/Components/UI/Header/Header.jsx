@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { IoReorderThreeOutline } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { jwtDecode } from 'jwt-decode';
+import './Header.css'; // Import your CSS file for styling
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);

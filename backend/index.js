@@ -7,6 +7,8 @@ import authRoutes from './routes/authRoutes.js';
 import roomRoutes from './routes/roomRoutes.js';
 import bookingRoutes from './routes/bookingRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
+import adminRoutes from './routes/adminRoutes.js'; // Adjust path if needed
+import contactRoutes from './routes/contactRoutes.js';
 
 dotenv.config();
 
@@ -22,7 +24,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api', bookingRoutes);
 app.use("/api", studentRoutes);
-
+app.use('/api/admin', adminRoutes);
+app.use("/api/rooms", roomRoutes);
+app.use('/api/contact', contactRoutes);
+app.use("/api", studentRoutes);
 
 
 // Environment variables

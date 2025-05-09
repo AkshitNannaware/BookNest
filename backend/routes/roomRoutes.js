@@ -2,69 +2,64 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import Room from '../models/Room.js';
+import User from '../models/userSchema.js'; // ✅ Added missing User import
 import authenticate from '../middlewares/authenticate.js';
 
 const router = express.Router();
 
-// Set up Multer for file uploads with additional error handling
+// Set up Multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Ensure 'uploads' directory exists
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
-// File filter for validating image types
 const fileFilter = (req, file, cb) => {
   const filetypes = /jpeg|jpg|png|gif/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
-
-  if (mimetype && extname) {
-    return cb(null, true);
-  } else {
-    cb(new Error('Only image files are allowed!'), false);
-  }
+  if (mimetype && extname) cb(null, true);
+  else cb(new Error('Only image files are allowed!'), false);
 };
 
-// Set limits (file size limit of 5MB for each image)
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
-  fileFilter: fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter,
 });
 
-// POST /api/rooms/upload to upload room data and photos
+// ✅ Upload room with photos
 router.post('/upload', authenticate, upload.array('photos', 3), async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ msg: "No files uploaded" });
+      return res.status(400).json({ msg: 'No files uploaded' });
     }
 
-    // const { ownerId, title, description, rent, location, facilities } = req.body;
-    // const photoPaths = req.files.map((file) => `/uploads/${file.filename}`);
-    // const facilityList = Array.isArray(facilities) ? facilities : [facilities];
-
-    const ownerId = req.user.id; // ✅ Get owner ID from the token
+    const ownerId = req.user.id;
     if (!ownerId) {
-      return res.status(401).json({ msg: "Owner ID missing. Please log in again." });
+      return res.status(401).json({ msg: 'Owner ID missing. Please log in again.' });
     }
 
-    const { title, description, rent, location, facilities } = req.body;
+    const { title, description, rent, location, facilities, mobile, name } = req.body;
     const photoPaths = req.files.map((file) => `/uploads/${file.filename}`);
-    // const facilityList = Array.isArray(facilities) ? facilities : [facilities];
 
-    let facilityList;
-if (Array.isArray(facilities)) {
-  facilityList = facilities;
-} else if (typeof facilities === 'string') {
-  facilityList = facilities.split(',').map(f => f.trim());
-} else {
-  facilityList = [];
-}
+    let facilityList = [];
+    if (facilities) {
+      facilityList = Array.isArray(facilities)
+        ? facilities
+        : facilities.split(',').map((f) => f.trim());
+    }
 
+    if (mobile) {
+      const owner = await User.findById(ownerId);
+      if (owner && !owner.phone) {
+        owner.phone = mobile;
+        await owner.save();
+      }
+    }
 
     const room = new Room({
       ownerId,
@@ -72,30 +67,31 @@ if (Array.isArray(facilities)) {
       description,
       rent,
       location,
-      // facilities: facilityList,
       facilities: facilityList,
       photos: photoPaths,
+      mobile,
+      name,
     });
 
     const savedRoom = await room.save();
-
     res.status(201).json({ msg: 'Room uploaded successfully', room: savedRoom });
   } catch (err) {
     console.error('Upload error:', err);
     if (err.message.includes('Only image files are allowed!')) {
-      res.status(400).json({ msg: 'Invalid file type. Only images are allowed.' });
+      return res.status(400).json({ msg: 'Invalid file type. Only images are allowed.' });
     } else if (err.message.includes('File too large')) {
-      res.status(400).json({ msg: 'File size exceeds the 5MB limit.' });
-    } else {
-      res.status(500).json({ msg: 'Server error during upload' });
+      return res.status(400).json({ msg: 'File size exceeds the 5MB limit.' });
+    } else if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+      return res.status(400).json({ msg: 'Too many files uploaded. Maximum is 3.' });
     }
+    res.status(500).json({ msg: 'Server error during upload' });
   }
 });
 
-// GET /api/rooms/rental-history/:ownerId to fetch rental history of a room owner
+// ✅ Rental history route
 router.get('/rental-history', authenticate, async (req, res) => {
   try {
-    const ownerId = req.user.id; // Assuming user is added by the authenticate middleware
+    const ownerId = req.user.id;
     const rooms = await Room.find({ ownerId }).populate('rentedBy.user', 'username email');
     res.status(200).json({ rooms });
   } catch (err) {
@@ -104,14 +100,27 @@ router.get('/rental-history', authenticate, async (req, res) => {
   }
 });
 
-// POST /api/rooms to create a new room
-router.post('/', async (req, res) => {
+// ✅ Secure room creation (alternative route)
+router.post('/', authenticate, async (req, res) => {
   try {
-    const { title, location, rent, photos, description, amenities, ownerId } = req.body;
+    const { title, location, rent, photos, description, amenities } = req.body;
+    const ownerId = req.user.id;
 
-    const newRoom = new Room({ title, location, rent, photos, description, amenities, ownerId });
+    if (!title || !location || !rent || !photos || !description || !ownerId) {
+      return res.status(400).json({ msg: 'Missing required fields' });
+    }
+
+    const newRoom = new Room({
+      title,
+      location,
+      rent,
+      photos,
+      description,
+      amenities,
+      ownerId,
+    });
+
     const savedRoom = await newRoom.save();
-
     res.status(201).json(savedRoom);
   } catch (err) {
     console.error("Error uploading room:", err.message);
@@ -119,43 +128,53 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/rooms/all to fetch all rooms
-router.get('/all', async (req, res) => {
+// ✅ Get all rooms (public)
+router.get('/', async (req, res) => {
   try {
-    const rooms = await Room.find();
-    res.status(200).json({ rooms });
-  } catch (error) {
-    console.error("Error fetching rooms:", error.message);
-    res.status(500).json({ msg: "Server error fetching rooms" });
-  }
-});
-
-// GET /api/rooms/search to filter rooms by location
-router.get('/search', async (req, res) => {
-  try {
-    const { location } = req.query;
-    const query = location ? { location: { $regex: new RegExp(location, 'i') } } : {};
-    const rooms = await Room.find(query);
+    const rooms = await Room.find().populate('ownerId', 'email mobile');
     res.status(200).json(rooms);
-  } catch (error) {
-    res.status(500).json({ message: 'Error filtering rooms.' });
+  } catch (err) {
+    res.status(500).json({ msg: 'Error fetching rooms' });
   }
 });
 
-// PUT /api/rooms/:id to update room information by ID
-router.put("/:id", async (req, res) => {
+// ✅ Update room info
+router.put('/:id', authenticate, async (req, res) => {
   try {
-    const updatedRoom = await Room.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true }
-    );
+    const updatedRoom = await Room.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
     if (!updatedRoom) {
       return res.status(404).json({ message: "Room not found" });
     }
     res.status(200).json(updatedRoom);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// ✅ Delete room (optional)
+router.delete('/:id', authenticate, async (req, res) => {
+  try {
+    const room = await Room.findById(req.params.id);
+    if (!room) return res.status(404).json({ msg: "Room not found" });
+
+    if (room.ownerId.toString() !== req.user.id) {
+      return res.status(403).json({ msg: "Not authorized" });
+    }
+
+    await Room.findByIdAndDelete(req.params.id);
+    res.status(200).json({ msg: "Room deleted" });
+  } catch (err) {
+    res.status(500).json({ msg: "Failed to delete room", error: err.message });
+  }
+});
+
+// ✅ Get all rooms (duplicate fallback route)
+router.get('/all', async (req, res) => {
+  try {
+    const rooms = await Room.find();
+    res.status(200).json({ rooms });
+  } catch (err) {
+    res.status(500).json({ msg: "Failed to fetch rooms", error: err.message });
   }
 });
 

@@ -56,7 +56,7 @@ const BookingForm = ({ roomId, roomName, roomPrice }) => {
 
       const data = await response.json();
       if (response.ok) {
-        setMessage("Booking successful! Check your email for confirmation.");
+        setMessage("Booking successful!");
         setError("");
         setUserDetails({
           name: "",

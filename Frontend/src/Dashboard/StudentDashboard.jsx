@@ -4,30 +4,29 @@ import { jwtDecode } from 'jwt-decode';
 const StudentDashboard = () => {
   const [rentedRooms, setRentedRooms] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [userRole, setUserRole] = useState(null);
+  const [accessDenied, setAccessDenied] = useState(false);
 
   useEffect(() => {
     const fetchRentedRooms = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
-        alert('Please login first.');
         window.location.href = '/login';
         return;
       }
 
       try {
         const decoded = jwtDecode(token);
-        setUserRole(decoded.role);
+        const role = decoded?.role;
 
-        if (decoded.role !== 'student' && decoded.role !== 'admin') {
-          alert('Access denied. Only students and admins can view this page.');
+        if (role !== 'student' && role !== 'admin') {
+          accessDenied(true);
           return;
         }
 
-        const response = await fetch('http://localhost:5000/api/rooms/rented', {
+        const response = await fetch('http://localhost:5000/api/student/rented', {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (!response.ok) {
@@ -38,8 +37,7 @@ const StudentDashboard = () => {
         setRentedRooms(data);
       } catch (error) {
         console.error('Error:', error);
-        alert('Invalid or expired session. Please login again.');
-        window.location.href = '/login';
+        setAccessDenied(true);
       } finally {
         setLoading(false);
       }
@@ -48,24 +46,31 @@ const StudentDashboard = () => {
     fetchRentedRooms();
   }, []);
 
-  if (loading) {
-    return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>;
+
+  if (accessDenied) {
+    return (
+      <div className="text-center mt-10 text-red-600 font-semibold text-xl">
+        You do not have permission to view this dashboard.
+      </div>
+    );
   }
 
   return (
     <div className="rented-rooms-container">
-      <h2>My Rented Rooms</h2>
+      <h2 className="text-2xl font-bold mb-4">My Rented Rooms</h2>
       {rentedRooms.length === 0 ? (
         <p>You have not rented any rooms yet.</p>
       ) : (
         <div className="rented-rooms-grid">
           {rentedRooms.map((room) => (
             <div key={room._id} className="rented-room-card">
-              <img src={room.photos && room.photos[0]} alt={room.title} className="room-image" />
+              <img src={room.photos?.[0]} alt={room.title} className="room-image" />
               <h3>{room.title}</h3>
               <p>{room.description}</p>
               <p><strong>Rent:</strong> Rs. {room.rent}</p>
               <p><strong>Location:</strong> {room.location}</p>
+              <p><strong>Booked At:</strong> {new Date(room.bookedAt).toLocaleString()}</p>
             </div>
           ))}
         </div>
