@@ -17,7 +17,7 @@ const Home = () => {
       }
     };
 
-    fetchResidencies();
+    fetchResidencies();  
   }, []);
 
   return (

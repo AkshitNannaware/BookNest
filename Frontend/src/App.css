@@ -23,6 +23,35 @@
   object-fit: cover;
   border-radius: 8px;
 }
+.cancel-button {
+  background-color: #e53e3e; /* Red color */
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 3px 6px rgba(229, 62, 62, 0.4);
+}
+
+.cancel-button:hover {
+  background-color: #c53030; /* Darker red on hover */
+}
+
+.cancel-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.6);
+}
+
+.cancel-button.disabled,
+.cancel-button:disabled {
+  background-color: #a0aec0; /* Grayish color */
+  cursor: not-allowed;
+  box-shadow: none;
+  color: #718096; /* Dark gray text */
+}
+
 
 
 
@@ -37,6 +66,11 @@ body {
 }
 
 /* Dashboard Container */
+
+.hover\:bg-indigo-700 {
+    height: 49px;
+}
+
 .owner-dashboard {
   display: grid;
   grid-template-columns: 1fr;

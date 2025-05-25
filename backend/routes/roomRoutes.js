@@ -2,27 +2,22 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import Room from '../models/Room.js';
-import User from '../models/userSchema.js'; // ✅ Added missing User import
+import User from '../models/userSchema.js';
 import authenticate from '../middlewares/authenticate.js';
 
 const router = express.Router();
 
-// Set up Multer for file uploads
+// Multer setup
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
+  destination: (req, file, cb) => cb(null, 'uploads/'),
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
 });
 
 const fileFilter = (req, file, cb) => {
   const filetypes = /jpeg|jpg|png|gif/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
-  if (mimetype && extname) cb(null, true);
-  else cb(new Error('Only image files are allowed!'), false);
+  cb(null, mimetype && extname);
 };
 
 const upload = multer({
@@ -31,7 +26,16 @@ const upload = multer({
   fileFilter,
 });
 
-// ✅ Upload room with photos
+function parseFacilities(facilities) {
+  try {
+    return JSON.parse(facilities);
+  } catch (e) {
+    console.error('Failed to parse facilities:', e);
+    return [];
+  }
+}
+
+// Upload room
 router.post('/upload', authenticate, upload.array('photos', 3), async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
@@ -39,19 +43,11 @@ router.post('/upload', authenticate, upload.array('photos', 3), async (req, res)
     }
 
     const ownerId = req.user.id;
-    if (!ownerId) {
-      return res.status(401).json({ msg: 'Owner ID missing. Please log in again.' });
-    }
+    if (!ownerId) return res.status(401).json({ msg: 'Owner ID missing. Please log in again.' });
 
     const { title, description, rent, location, facilities, mobile, name } = req.body;
     const photoPaths = req.files.map((file) => `/uploads/${file.filename}`);
-
-    let facilityList = [];
-    if (facilities) {
-      facilityList = Array.isArray(facilities)
-        ? facilities
-        : facilities.split(',').map((f) => f.trim());
-    }
+    const facilityList = parseFacilities(facilities);
 
     if (mobile) {
       const owner = await User.findById(ownerId);
@@ -88,7 +84,7 @@ router.post('/upload', authenticate, upload.array('photos', 3), async (req, res)
   }
 });
 
-// ✅ Rental history route
+// Rental history
 router.get('/rental-history', authenticate, async (req, res) => {
   try {
     const ownerId = req.user.id;
@@ -100,15 +96,17 @@ router.get('/rental-history', authenticate, async (req, res) => {
   }
 });
 
-// ✅ Secure room creation (alternative route)
+// Secure room creation without photos
 router.post('/', authenticate, async (req, res) => {
   try {
-    const { title, location, rent, photos, description, amenities } = req.body;
+    const { title, location, rent, photos, description, facilities, mobile } = req.body;
     const ownerId = req.user.id;
 
     if (!title || !location || !rent || !photos || !description || !ownerId) {
       return res.status(400).json({ msg: 'Missing required fields' });
     }
+
+    const facilityList = parseFacilities(facilities);
 
     const newRoom = new Room({
       title,
@@ -116,8 +114,9 @@ router.post('/', authenticate, async (req, res) => {
       rent,
       photos,
       description,
-      amenities,
+      facilities: facilityList,
       ownerId,
+      mobile,
     });
 
     const savedRoom = await newRoom.save();
@@ -128,7 +127,7 @@ router.post('/', authenticate, async (req, res) => {
   }
 });
 
-// ✅ Get all rooms (public)
+// Get all rooms (public)
 router.get('/', async (req, res) => {
   try {
     const rooms = await Room.find().populate('ownerId', 'email mobile');
@@ -138,7 +137,17 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ✅ Update room info
+// Duplicate fallback get all rooms route (optional)
+router.get('/all', async (req, res) => {
+  try {
+    const rooms = await Room.find();
+    res.status(200).json({ rooms });
+  } catch (err) {
+    res.status(500).json({ msg: "Failed to fetch rooms", error: err.message });
+  }
+});
+
+// Update room info
 router.put('/:id', authenticate, async (req, res) => {
   try {
     const updatedRoom = await Room.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
@@ -151,7 +160,7 @@ router.put('/:id', authenticate, async (req, res) => {
   }
 });
 
-// ✅ Delete room (optional)
+// Delete room
 router.delete('/:id', authenticate, async (req, res) => {
   try {
     const room = await Room.findById(req.params.id);
@@ -168,13 +177,23 @@ router.delete('/:id', authenticate, async (req, res) => {
   }
 });
 
-// ✅ Get all rooms (duplicate fallback route)
-router.get('/all', async (req, res) => {
+// Get a specific room by ID (keep this last!)
+router.get('/:id', async (req, res) => {
   try {
-    const rooms = await Room.find();
-    res.status(200).json({ rooms });
+    const { id } = req.params;
+    if (!id || id.length !== 24) {
+      return res.status(400).json({ error: 'Invalid room ID' });
+    }
+
+    const room = await Room.findById(id).populate('ownerId', 'email name mobile');
+    if (!room) {
+      return res.status(404).json({ error: 'Room not found' });
+    }
+
+    res.status(200).json(room);
   } catch (err) {
-    res.status(500).json({ msg: "Failed to fetch rooms", error: err.message });
+    console.error('Error fetching room by ID:', err.message);
+    res.status(500).json({ error: 'Server error', details: err.message });
   }
 });
 

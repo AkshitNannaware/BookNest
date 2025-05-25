@@ -25,6 +25,18 @@ export const register = async (req, res) => {
       return res.status(400).json({ msg: 'All fields including photo are required' });
     }
 
+    // Restrict admin registration
+    const allowedAdminEmails = [
+      'akshit.nannaware@cdgi.edu.in',
+      'aman.sadiwal@cdgi.edu.in',
+      'aksita.ramayane@cdgi.edu.in',
+      'admin4@example.com',
+    ];
+
+    if (role === 'admin' && !allowedAdminEmails.includes(email)) {
+      return res.status(403).json({ msg: 'Only authorized users can register as admins.' });
+    }
+
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {

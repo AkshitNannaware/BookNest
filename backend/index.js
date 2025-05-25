@@ -9,13 +9,16 @@ import bookingRoutes from './routes/bookingRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
 import adminRoutes from './routes/adminRoutes.js'; // Adjust path if needed
 import contactRoutes from './routes/contactRoutes.js';
-
+ 
 dotenv.config();
 
 const app = express();
 
-// Middleware to parse JSON requests
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Allow frontend to make requests from this origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow headers
+}));
 app.use(express.json());
 app.use('/uploads', express.static('uploads')); // Serve image files
 
@@ -23,7 +26,8 @@ app.use('/uploads', express.static('uploads')); // Serve image files
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api', bookingRoutes);
-app.use("/api", studentRoutes);
+// app.use("/api", studentRoutes);
+app.use('/api/student', studentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use('/api/contact', contactRoutes);
@@ -33,12 +37,12 @@ app.use("/api", studentRoutes);
 // Environment variables
 const PORT = process.env.PORT || 5001;
 const URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/bookenest';
-
 // MongoDB connection
 mongoose
   .connect(URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
+    dbName: 'BookNest',
   })
   .then(() => console.log('✅ MongoDB connected successfully'))
   .catch((error) => console.error('❌ MongoDB connection error:', error.message));
@@ -57,7 +61,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to the BookNest API!');
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
 });

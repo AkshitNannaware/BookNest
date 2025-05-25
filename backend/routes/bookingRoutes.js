@@ -6,7 +6,6 @@ import authenticate from '../middlewares/authenticate.js';
 
 const router = express.Router();
 
-// POST /book-room
 router.post('/book-room', authenticate, async (req, res) => {
   try {
     if (req.user.role !== "student") {
@@ -14,36 +13,43 @@ router.post('/book-room', authenticate, async (req, res) => {
     }
 
     const studentId = req.user.id;
-    const { roomId } = req.body;
-
-    console.log(`Booking attempt by student: ${studentId}, Room ID: ${roomId}`);
+    const { roomId, months } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(studentId) || !mongoose.Types.ObjectId.isValid(roomId)) {
       return res.status(400).json({ error: 'Invalid roomId or studentId format' });
     }
 
-    // Check if the room exists and is not already booked
     const room = await Room.findById(roomId);
     if (!room) {
       return res.status(404).json({ error: 'Room not found.' });
     }
 
-    if (room.isBooked) {
-      return res.status(400).json({ error: 'Room is already booked.' });
+    // Calculate booking dates
+    const startDate = new Date(); // today
+    const endDate = new Date();
+    endDate.setMonth(endDate.getMonth() + parseInt(months || 1));
+
+    // Check for booking conflicts
+    const conflictingBooking = await Booking.findOne({
+      roomId,
+      $or: [
+        { startDate: { $lte: endDate }, endDate: { $gte: startDate } }
+      ]
+    });
+
+    if (conflictingBooking) {
+      return res.status(400).json({ error: "Room is already booked during this period" });
     }
 
-    // Check if the student has already booked this room
-    const existingBooking = await Booking.findOne({ roomId, studentId });
-    if (existingBooking) {
-      return res.status(400).json({ error: "Room already booked by this user" });
-    }
+    // Save booking
+    const booking = new Booking({
+      studentId,
+      roomId,
+      startDate,
+      endDate
+    });
 
-    const booking = new Booking({ studentId, roomId });
     await booking.save();
-    console.log('Booking saved:', booking);
-
-    room.isBooked = true;
-    await room.save();
 
     res.status(201).json({ message: 'Room booked successfully', booking });
   } catch (err) {
@@ -51,6 +57,7 @@ router.post('/book-room', authenticate, async (req, res) => {
     res.status(500).json({ error: 'Booking failed', details: err.message });
   }
 });
+
 
 // GET /api/rooms/rented
 router.get("/rooms/rented", authenticate, async (req, res) => {

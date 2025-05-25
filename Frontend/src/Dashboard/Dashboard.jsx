@@ -3,21 +3,37 @@ import { LayoutDashboard, Home, Building2 } from 'lucide-react';
 import AdminDashboard from './AdminDashboard';
 import OwnerDashboard from './OwnerDashboard';
 import StudentDashboard from './StudentDashboard';
+import { jwtDecode } from 'jwt-decode';
+import { Navigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const [activePage, setActivePage] = useState('');
 
-  // Set default dashboard page based on user role
   useEffect(() => {
-    const role = localStorage.getItem('userRole');
-    if (role === 'admin') {
-      setActivePage('admin');
-    } else if (role === 'owner') {
-      setActivePage('owner');
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const role = decoded.role;
+        if (role === 'admin') {
+          setActivePage('admin');
+        } else if (role === 'owner') {
+          setActivePage('owner');
+        } else {
+          setActivePage('student');
+        }
+      } catch (err) {
+        console.error('Invalid token', err);
+        setActivePage('student');
+      }
     } else {
       setActivePage('student');
     }
   }, []);
+
+  if (!localStorage.getItem('token')) {
+    return <Navigate to="/login" />;
+  }
 
   const renderPage = () => {
     switch (activePage) {

@@ -30,6 +30,7 @@ const BookingForm = ({ roomId, roomName, roomPrice }) => {
     const bookingData = {
       roomId,
       ...userDetails,
+      months: userDetails.months
     };
 
     try {

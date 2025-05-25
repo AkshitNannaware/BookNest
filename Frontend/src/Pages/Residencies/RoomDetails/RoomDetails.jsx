@@ -14,13 +14,18 @@ const RoomDetails = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (passedRoom) return;
+    // if (passedRoom) return;
+    if (passedRoom) {
+      console.log("Passed room from location.state:", passedRoom);
+      return;
+    }
 
     const fetchRoom = async () => {
       try {
         const res = await axios.get(`http://localhost:5000/api/rooms/${id}`);
         setRoom(res.data);
-        console.log(res.data);  // Log the response to check the room object
+        console.log("Fetched room:", res.data);
+        console.log("Fetched facilities", res.data.facilities);
       } catch (err) {
         console.error("Failed to fetch room details", err);
         setError("Unable to load room details.");
@@ -45,6 +50,31 @@ const RoomDetails = () => {
     return "https://via.placeholder.com/300x200?text=No+Image+Available"; // Fallback
   };
 
+  const renderFacilities = () => {
+    if (!room.facilities) return <span>No facilities listed.</span>;
+
+    if (Array.isArray(room.facilities)) {
+      if (room.facilities.length === 0) return <span>No facilities listed.</span>;
+      return room.facilities.map((facility, idx) => (
+        <span key={idx} className="facility-badge">
+          {facility}
+        </span>
+      ));
+    }
+
+    if (typeof room.facilities === "string") {
+      const splitFacilities = room.facilities.split(",").map(f => f.trim());
+      return splitFacilities.map((facility, idx) => (
+        <span key={idx} className="facility-badge">
+          {facility}
+        </span>
+      ));
+    }
+
+
+    return <span>No facilities listed.</span>;
+  };
+
   return (
     <div className="room-details-container">
       <h1 className="room-title">{room.title}</h1>
@@ -54,7 +84,7 @@ const RoomDetails = () => {
         className="room-image"
         onError={(e) => {
           e.target.onerror = null;
-          e.target.src = "https://via.placeholder.com/300x200?text=No+Image+Available"; // Fallback if error
+          e.target.src = "https://via.placeholder.com/300x200?text=No+Image+Available";
         }}
       />
       <p className="room-location">
@@ -70,10 +100,7 @@ const RoomDetails = () => {
         <strong>Description:</strong> {room.description || "No description available."}
       </p>
       <p className="room-facilities">
-        <strong>Facilities:</strong>
-        {room.facilities && room.facilities.length > 0
-          ? room.facilities.join(", ")
-          : "No facilities listed."}
+        <strong>Facilities:</strong> {renderFacilities()}
       </p>
 
       <button className="book-now-btn" onClick={() => setShowBookingForm(true)}>
