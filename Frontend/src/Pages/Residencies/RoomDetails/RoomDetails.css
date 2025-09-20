@@ -1,4 +1,4 @@
-.room-details-container {
+/* .room-details-container {
     max-width: 700px;
     margin: 18px auto;
     padding: 20px;
@@ -28,4 +28,93 @@
     font-size: 16px;
     color: #333;
     margin-bottom: 10px;
+  } */
+
+
+
+
+
+
+
+.room-details-container {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.room-title {
+  font-size: 28px;
+  color: #1f3e72;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Images container for multiple images */
+.room-images {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.room-image {
+  width: 32%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.room-location,
+.room-rent,
+.room-description,
+.room-facilities {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* ------------------ Mobile Responsive ------------------ */
+@media (max-width: 768px) {
+  .room-title {
+    font-size: 24px;
   }
+
+  .room-image {
+   width: 50%;
+        margin-bottom: 22px;
+        height: 250px;
+  }
+
+  .room-location,
+  .room-rent,
+  .room-description,
+  .room-facilities {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .room-title {
+    font-size: 20px;
+  }
+
+  .room-image {
+    width: 100%; /* single image per row */
+    margin-bottom: 12px;
+  }
+
+  .room-location,
+  .room-rent,
+  .room-description,
+  .room-facilities {
+    font-size: 14px;
+  }
+
+  .room-details-container {
+    padding: 15px;
+    margin: 12px 10px;
+  }
+}

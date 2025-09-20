@@ -14,7 +14,7 @@
     "aos": "^2.3.4",
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
-    "framer-motion": "^12.6.3",
+    "framer-motion": "^12.12.2",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.487.0",
     "react": "^19.0.0",

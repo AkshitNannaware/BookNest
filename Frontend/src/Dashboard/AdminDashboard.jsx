@@ -125,7 +125,7 @@ const AdminDashboard = () => {
               <FaUserGraduate size={24} />
             </div>
             <div>
-              <p className="text-gray-500 text-sm">Total Students</p>
+              <p className="text-gray-500 text-sm admin-I">Total Students</p>
               <p className="text-2xl font-bold">{stats.totalStudents}</p>
             </div>
           </div>
@@ -135,7 +135,7 @@ const AdminDashboard = () => {
               <FaChalkboardTeacher size={24} />
             </div>
             <div>
-              <p className="text-gray-500 text-sm">Total Owners</p>
+              <p className="text-gray-500 text-sm admin-I">Total Owners</p>
               <p className="text-2xl font-bold">{stats.totalOwners}</p>
             </div>
           </div>
@@ -145,17 +145,17 @@ const AdminDashboard = () => {
               <FiMail size={24} />
             </div>
             <div>
-              <p className="text-gray-500 text-sm">Messages</p>
-              <p className="text-2xl font-bold">{stats.totalMessages}</p>
+              <p className="text-gray-500 text-sm admin-I">Messages</p>
+              <p className="text-2xl font-bold admin-I">{stats.totalMessages}</p>
             </div>
           </div>
           
           <div className="bg-white rounded-lg shadow p-6 flex items-center">
-            <div className="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
+            <div className="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4 ">
               <FiDollarSign size={24} />
             </div>
             <div>
-              <p className="text-gray-500 text-sm">Total Earnings</p>
+              <p className="text-gray-500 text-sm admin-I">Total Earnings</p>
               <p className="text-2xl font-bold">${stats.totalEarnings.toFixed(2)}</p>
             </div>
           </div>
@@ -168,19 +168,19 @@ const AdminDashboard = () => {
               onClick={() => setActiveTab('students')}
               className={`px-6 py-3 font-medium text-sm flex items-center ${activeTab === 'students' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
             >
-              <FaUserGraduate className="mr-2" /> Students
+              <FaUserGraduate className="mr-2 admin" /> Students
             </button>
             <button
               onClick={() => setActiveTab('owners')}
               className={`px-6 py-3 font-medium text-sm flex items-center ${activeTab === 'owners' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
             >
-              <FaChalkboardTeacher className="mr-2" /> Owners
+              <FaChalkboardTeacher className="mr-2 admin" /> Owners
             </button>
             <button
               onClick={() => setActiveTab('messages')}
               className={`px-6 py-3 font-medium text-sm flex items-center ${activeTab === 'messages' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
             >
-              <FiMail className="mr-2" /> Messages
+              <FiMail className="mr-2 admin" /> Messages
             </button>
           </nav>
         </div>

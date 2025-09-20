@@ -4,7 +4,7 @@ import "swiper/css";
 import "./About.css";
 
 const About = ({ residencies }) => {
-  const topResidencies = residencies.slice(0, 6); // show top 6 rooms
+  const topResidencies = residencies.slice(0, 6);
 
   const getImageSrc = (photos) => {
     if (Array.isArray(photos) && photos.length > 0) {
@@ -19,14 +19,14 @@ const About = ({ residencies }) => {
   };
 
   return (
-    <section className="about-section">
+    <section className="about">
       <h2 className="primaryText">Top Rooms for Students :-</h2>
 
       <Swiper
         grabCursor={true}
         spaceBetween={20}
         breakpoints={{
-          320: { slidesPerView: 1 },
+          320: { slidesPerView: 1.1 },
           640: { slidesPerView: 2 },
           768: { slidesPerView: 3 },
           1024: { slidesPerView: 4 },

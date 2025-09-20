@@ -1,142 +1,150 @@
+/* Navbar container */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 50px;
+  background-color: aliceblue;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo img.brand {
+  width: 130px;
+  height: 60px;
+  border-radius: 6px;
+}
+p.textbrand {
+  font-weight: 600;
+  color: #1f3e72;
+  font-size: 26px;
+  margin-left: 5px;
+}
+
+/* Nav links */
+.nav-links {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  font-size: 27px;
+  font-weight: 500;
+}
+.nav {
+  text-decoration: none;
+  color: black;
+  transition: color 0.3s ease;
+}
+.nav:hover {
+  color: #007BFF;
+}
+
+/* Logout button */
 .logout-button {
-    background-color: #ff4d4f;
-    color: white;
-    font-weight: 500;
-    border: none;
-    padding: 8px 16px;
-    text-align: center;
-    width: 90%;
-    margin: 5px auto 0 auto;
+  background-color: #ff4d4f;
+  color: white;
+  font-weight: 500;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+.logout-button:hover {
+  background-color: #e63946;
+}
+
+/* Hamburger (mobile only) */
+.hamburger {
+  display: none;
+  cursor: pointer;
+}
+
+/* Dropdown */
+.user-menu {
+  position: relative;
+}
+.icon-button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: black;
+  font-size: 35px;
+}
+.dropdown-list {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  list-style: none;
+  background-color: white;
+  padding: 10px 0;
+  margin: 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  z-index: 999;
+  width: 180px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+}
+.dropdown-list li {
+  padding: 10px 15px;
+  font-size: 16px;
+}
+.dropdown-list li:hover {
+  background-color: #f1f1f1;
+}
+.dropdown-list a {
+  color: black;
+  text-decoration: none;
+  display: block;
+  font-size: 16px;
+}
+.username {
+  font-weight: bold;
+  color: #1f3e72;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hamburger {
     display: block;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
+    color: black;
   }
-    
-  .logout-button:hover {
-    background-color: #e63946;
-  }
-  
-  .logo {
-    display: flex;
-    align-items: center;
-  }
-  
-  p.textbrand {
-    font-weight: 500;
-    color: #1f3e72;
-    margin-top: 6px;
-    font-size: 25px;
-    margin-left: 4px;
-  }
-  
-  .img.brand {
-    height: 79px;
-    width: 111px;
-    margin-top: 4px;
-    margin-left: 50px;
-  }
-  
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 50px;
-    background-color: aliceblue;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .logo img.brand {
-    width: 100px;
-    height: 43px;
-    border-radius: 5px;
-  }
-  
+
   .nav-links {
-    display: flex;
-    gap: 22px;
-    align-items: center;
-    font-size: 23px;
-    font-family: math;
-    margin-top: 10px;
-  }
-  
-  .nav {
-    text-decoration: none;
-    font-weight: bold;
-    color: black;
-  }
-  
-  .nav:hover {
-    color: #007BFF;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .navbar {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-    }
-  
-    .nav-links {
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: 18px;
-      margin-top: 0;
-    }
-  
-    .dropdown-list {
-      right: auto;
-      left: 0;
-    }
-  }
-  
-  .icon-button {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: black;
-  }
-  
-  .user-menu {
-    position: relative;
-  }
-  
-  .dropdown-list {
     position: absolute;
-    top: 40px;
-    right: -40px;
-    list-style: none;
-    background-color: white;
-    padding: 10px 0;
-    margin: 0;
-    border: 1px solid #ddd;
+    top: 70px;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    background: white;
+    width: 220px;
+    padding: 20px;
     border-radius: 8px;
-    z-index: 999;
-    width: 160px;
-    color: black;
+    gap: 15px;
+    display: none;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
   }
-  
-  .dropdown-list li {
-    padding: 10px 15px;
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links .nav {
     font-size: 18px;
+    width: 100%;
   }
-  
-  .dropdown-list li:hover {
-    background-color: #f1f1f1;
+
+  .logout-button {
+    width: 100%;
   }
-  
-  .dropdown-list a {
-    color: black;
-    text-decoration: none;
-    display: block;
-    font-size: 17px;
-  }
-  
-  .react-datepicker__portal {
-    z-index: 99999 !important;
-    position: absolute;
-  }
-  
+}
