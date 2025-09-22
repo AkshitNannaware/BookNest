@@ -1,6 +1,18 @@
-.Hero {
+/* .Hero {
     position: relative;
     height: 670px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+@media (max-width: 1024px) {
+  .Hero {
+    height: 600px;
+    min-height: 80vh;
+  }
 }
 
 .hero-overlay {
@@ -10,53 +22,104 @@
 }
 
 .heroimg {
+    width: 100%;
+    height: 120%;
     object-fit: cover;
     opacity: 0.7;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .hero-text {
     position: absolute;
     top: 15%;
-    left: 25%;
-    transform: translate(-50%, -50%);
+    left: 28%;
+    transform: translateX(-50%);
     color: black;
     text-align: center;
     z-index: 1;
+    width: 90%;
+    max-width: 852px;
 }
 
 .gradient-text {
     font-size: 75px;
     font-weight: bold;
+    margin-bottom: 20px;
+    line-height: 1.2;
 }
 
 .black {
     font-size: 25px;
     font-weight: 500;
+    display: block;
+    margin-bottom: -25px;
+}
+
+
+@media (max-width: 1024px) {
+  .hero-text {
+    top: 20%;
+    width: 95%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .gradient-text {
+    font-size: 60px;
+  }
+  
+  .black {
+    font-size: 22px;
+  }
 }
 
 .advanced-search {
     position: absolute;
-    bottom: 15%;
+    bottom: 32%;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 1rem;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.9);
     padding: 1rem 2rem;
     border-radius: 12px;
     z-index: 3;
-    width: 657px;
+    width: 90%;
+    max-width: 657px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+@media (max-width: 1024px) {
+  .advanced-search {
+    width: 95%;
+    padding: 1rem 1.5rem;
+    gap: 0.8rem;
+    margin-bottom: 270px;
+  }
 }
 
 .advanced-search input,
 .advanced-search .date-picker {
-    padding: 13px;
+    padding: 13px 20px;
     border-radius: 100px;
     border: none;
     outline: none;
     font-size: 1rem;
     background: aliceblue;
-    width: 500px;
+    flex: 1;
+    min-width: 200px;
+}
+
+
+@media (max-width: 1024px) {
+  .advanced-search input,
+  .advanced-search .date-picker {
+    padding: 12px 18px;
+    font-size: 0.95rem;
+  }
 }
 
 .advanced-search button {
@@ -70,7 +133,7 @@
 
 .about-lines {
     position: absolute;
-    bottom: -40%;
+    bottom: -17%;
     left: 34%;
     transform: translateX(-50%);
     color: black;
@@ -179,206 +242,420 @@
   margin: 0.5rem 0;
 }
 
-/* 📱 Mobile Responsive Fixes */
+
 @media screen and (max-width: 768px) {
   .Hero {
-    height: auto;
-    padding: 20px 10px;
-    text-align: center;
-  }
-
-  .hero-text {
-    position: static;
-    transform: none;
-    margin: 20px auto;
-  }
-
-  .gradient-text {
-    font-size: 32px;
-    line-height: 1.3;
-    background: linear-gradient(90deg, #1f3e72, #4776E6, #8E54E9);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .black {
-    font-size: 15px;
-  }
-
-  .advanced-search {
-    position: static;
-    transform: none;
-    width: 100%;
-    flex-direction: column;
-    padding: 1rem;
-    margin: 20px auto;
-    gap: 0.8rem;
-  }
-
-  .advanced-search input,
-  .advanced-search .date-picker {
-    width: 100%;
-    font-size: 16px;
-    padding: 10px;
-  }
-
-  .advanced-search button {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 6px;
-  }
-
-  .about-lines {
-    position: static;
-    transform: none;
-    margin: 20px auto;
-    font-size: 14px;
-    line-height: 1.5;
-    max-width: 100%;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.85);
-  }
-
-  .about-lines p {
-    font-size: 15px;
-  }
-
-  .filter-modal {
-    width: 90%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 15px;
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-
-  .filter-modal .checkbox-group {
-    gap: 10px;
-    font-size: 13px;
-  }
-
-  .apply-filters-btn,
-  .filter-modal .cancel-btn {
-    width: 100%;
-    padding: 12px;
-    font-size: 15px;
-  }
-
-  .search-bar {
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-
-  .room-card {
-    padding: 12px;
-    font-size: 14px;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 📱 Mobile Responsive Fixes */
-@media screen and (max-width: 768px) {
-  .Hero {
-    height: auto;
+    height: 100vh;
+    min-height: 100vh;
     padding: 0;
-    text-align: center;
-    position: relative;
   }
 
   .hero-overlay {
-    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   .heroimg {
     width: 100%;
-    height: auto;
-    border-radius: 0;
-    display: block;
+    height: 92%;
+    object-fit: cover;
   }
 
-  /* ✅ Text ko image ke upar laana */
   .hero-text {
     position: absolute;
-    top: 10%; /* text upar aa jayega */
-    left: 8%;
+    top: 20%;
+    left: 50%;
     transform: translateX(-50%);
-    margin: 0;
-    padding: 10px;
-    width: 90%;
+    width: 95%;
     z-index: 2;
   }
 
   .gradient-text {
-    font-size: 32px;
-    line-height: 1.3;
+    font-size: 36px;
+    line-height: 1.2;
+    margin-bottom: 15px;
     background: black;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .black {
-    font-size: 15px;
+    font-size: 16px;
+    margin-bottom: 8px;
   }
 
-  /* ✅ Search bar bhi image ke upar */
   .advanced-search {
     position: absolute;
-    bottom: 31%; /* image ke niche ki taraf search bar aa jayega */
+    bottom: 25%;
     left: 50%;
     transform: translateX(-50%);
-    width: 55%;
-    flex-direction: row;
-    padding: 1rem;
-    gap: 0.8rem;
-    background: rgba(255, 255, 255, 0.85);
-    border-radius: 12px;
-    z-index: 2;
+    width: 95%;
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    z-index: 3;
+    margin-bottom: 485px;
   }
 
   .advanced-search input,
   .advanced-search .date-picker {
-    width: 387%;
+    width: 100%;
     font-size: 16px;
-    padding: 17px;
-    height: 0px;
+    padding: 15px 20px;
+    border-radius: 8px;
   }
 
   .advanced-search button {
     width: 100%;
-    padding: 4px;
+    padding: 15px;
     font-size: 16px;
-    border-radius: 6px;
-    height: 35px;
+    border-radius: 8px;
   }
 
-  /* ✅ About lines ko niche rakhna */
   .about-lines {
     position: absolute;
-    font-size: -11px;
-    line-height: 17px;
-    padding: 0px;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 15px;
     background: rgba(255, 255, 255, 0.9);
-    border-radius: 7px;
-    z-index: 0;
-    left: 2px;
-    bottom: -18px;
-    width: 444px;
+    border-radius: 8px;
+    z-index: 2;
   }
 
   .about-lines p {
-        font-size: 13px;
+    font-size: 14px;
+    margin: 8px 0;
+  }
+
+  .filter-modal {
+    width: 95%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 12px;
+  }
+
+  .filter-modal .checkbox-group {
+    gap: 12px;
+    font-size: 14px;
+  }
+
+  .apply-filters-btn,
+  .filter-modal .cancel-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    margin: 5px 0;
+  }
+}
+
+
+
+@media screen and (max-width: 480px) {
+  .Hero {
+    height: 100vh;
+    min-height: 100vh;
+  }
+
+  .hero-text {
+    top: 6%;
+    width: 98%;
+    left: 1px;
+  }
+
+  .gradient-text {
+    font-size: 28px;
+    line-height: 1.1;
+  }
+
+  .black {
+    font-size: 14px;
+    margin-bottom: -24px;
+  }
+
+  .advanced-search {
+    bottom: -29%;
+    width: 60%;
+    padding: 1rem;
+    gap: 0.8rem;
+  }
+
+  .advanced-search input,
+  .advanced-search .date-picker {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .advanced-search button {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .about-lines {
+    bottom: 11%;
+    width: 73%;
+    padding: 12px;
+    font-size: 12px;
+    left: 149px;
+  }
+
+  .about-lines p {
+    font-size: 12px;
+    margin: 6px 0;
+  }
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.Hero {
+  position: relative;
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.heroimg {
+  width: 100%;
+  height: 94%;
+  object-fit: cover;
+  opacity: 0.7;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.hero-text {
+  position: absolute;
+  top: 18%;
+  left: 30%;
+  transform: translateX(-50%);
+  color: black;
+  text-align: center;
+  z-index: 1;
+  width: 90%;
+  max-width: 852px;
+}
+
+.gradient-text {
+  font-size: 72px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.black {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: -20px;
+}
+
+/* ---------- Advanced Search ---------- */
+.advanced-search {
+  position: absolute;
+  bottom: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  z-index: 3;
+  width: 90%;
+  max-width: 657px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.advanced-search input,
+.advanced-search .date-picker {
+  padding: 13px 20px;
+  border-radius: 100px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: aliceblue;
+  flex: 1;
+  min-width: 200px;
+}
+
+.advanced-search button {
+  background-color: #1f3e72;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+/* ---------- About Lines ---------- */
+.about-lines {
+  position: absolute;
+  bottom: 10%;
+  left: 29%;
+  transform: translateX(-50%);
+  color: black;
+  text-align: center;
+  z-index: 2;
+  font-size: 18px;
+  font-weight: 400;
+  max-width: 85%;
+  line-height: 1.6;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+}
+
+.about-lines p {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+/* ---------- Tablet (max-width: 1024px) ---------- */
+@media (max-width: 1024px) {
+  .hero-text {
+    top: 15%;
+        font-size: 90%;
+        left: 87px;
+  }
+
+  heroimg {
+    width: 100%;
+    height: 96%;
+    object-fit: cover;
+    opacity: 0.7;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+  .gradient-text {
+    font-size: 60px;
+  }
+  .black {
+    font-size: 18px;
+  }
+  .advanced-search {
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    padding: 1rem 1.5rem;
+    bottom: 248px;
+  }
+  .about-lines {
+    font-size: 51px;
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 25px;
+    left: 444px;
+  }
+}
+
+/* ---------- Mobile (max-width: 768px) ---------- */
+@media (max-width: 768px) {
+  .hero-text {
+    top: 15%;
+    width: 95%;
+    left:33px;
+  }
+  .gradient-text {
+    font-size: 42px;
+  }
+  .black {
+    font-size: 16px;
+  }
+
+  .advanced-search {
+    padding: 1.2rem;
+        display: flex;
+        flex-wrap: nowrap;
+        bottom: 494px;
+  }
+
+  .advanced-search input,
+  .advanced-search .date-picker,
+  .advanced-search button {
+    width: 111px;
+    border-radius: 8px;
+    padding: 14px;
+  }
+
+  .about-lines {
+    font-size: 51px;
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 73px;
+    left: 358px;
+  }
+  .about-lines p {
+    font-size: 13px;
+  }
+}
+
+/* ---------- Small Mobile (max-width: 480px) ---------- */
+@media (max-width: 480px) {
+  .hero-text {
+    top: 10%;
+    width: 97%;
+    left: 7px;
+  }
+  .gradient-text {
+    font-size: 28px;
+  }
+  .black {
+    font-size: 14px;
+  }
+
+  .advanced-search {
+    bottom: 50%;
+    width: 92%;
+    padding: 1rem;
+  }
+
+  .about-lines {
+    bottom: 2%;
+    font-size: 12px;
+    width: 90%;
+    padding: 8px;
+    left:166px
+  }
+  .advanced-search button {
+    width: 192px;
+    border-radius: 8px;
+    padding: 0px;
+  }
+  .advanced-search input, .advanced-search .date-picker, .advanced-search button {
+    width: 111px;
+    border-radius: 8px;
+    padding: 0px;
   }
 }

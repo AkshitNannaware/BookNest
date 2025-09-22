@@ -1,1 +1,94 @@
 @import "tailwindcss";
+@import "./responsive-utilities.css";
+
+/* Global responsive styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f7fafc;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Responsive utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.text-responsive {
+  font-size: clamp(14px, 2.5vw, 18px);
+}
+
+.heading-responsive {
+  font-size: clamp(20px, 4vw, 36px);
+}
+
+.p-responsive {
+  padding: clamp(10px, 2vw, 20px);
+}
+
+.m-responsive {
+  margin: clamp(10px, 2vw, 20px);
+}
+
+/* Mobile-first responsive breakpoints */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 20px;
+  }
+}
+
+/* Smooth transitions for better UX */
+* {
+  transition: all 0.3s ease;
+}
+
+/* Focus styles for accessibility */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #4361ee;
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Error states */
+.error {
+  border-color: #e53e3e !important;
+  box-shadow: 0 0 0 2px rgba(229, 62, 62, 0.2) !important;
+}
+
+/* Success states */
+.success {
+  border-color: #28a745 !important;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2) !important;
+}

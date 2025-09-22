@@ -110,10 +110,10 @@ const Signup = () => {
             </div>
 
             {/* Photo Upload */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Profile Photo</label>
               <div className="relative">
-                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100">
+                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 signin">
                   {previewImage ? (
                     <img src={previewImage} alt="Preview" className="w-full h-full object-cover" />
                   ) : (
@@ -122,7 +122,7 @@ const Signup = () => {
                     </div>
                   )}
                 </div>
-                <label className="absolute bottom-0 right-0 bg-blue-500 p-2 rounded-full text-white cursor-pointer hover:bg-blue-600 transition-colors">
+                <label className="absolute bottom-0 right-28 bg-blue-500 p-2 rounded-full text-white cursor-pointer hover:bg-blue-600 transition-colors">
                   <Upload className="w-4 h-4" />
                   <input
                     type="file"
@@ -132,7 +132,7 @@ const Signup = () => {
                   />
                 </label>
               </div>
-            </div>
+            </div> */}
 
             {/* Username Input */}
             <div>

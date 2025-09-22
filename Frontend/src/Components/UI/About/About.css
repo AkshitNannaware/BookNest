@@ -1,142 +1,18 @@
-/* section.about {
-    background-color: white;
-    margin-top: 425px;
-    margin-bottom: 86px;
-}
-
-h2.primaryText {
-  color: #1f3e72;
-  font-size: 36px;
-  margin-top: 43px;
-  margin-bottom: 0px;
-  margin-left: 15px;
-}
-.about-card {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  height: 422px; 
-  width: 100%;   
-  max-width: 365px;
-  margin: 0 10px;
-}
-
-.about-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.about-card img {
-  height: 200px;
-  width: 100%;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 15px;
-}
-
-.about-card .primaryText1 {
-  font-size: 22px;
-  color: #1f3e72;
-  margin: 10px 0 5px;
-}
-
-.about-card .location {
-  color: #666;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.about-card .rupees {
-  font-size: 16px;
-  color: #28a745;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-.about-card .book-now-btn {
-  padding: 10px 20px;
-  background-color: #4361ee;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.about-card .book-now-btn:hover {
-  background-color: #274cdb;
-}
-
-.swiper {
-  position: relative;
-  overflow: hidden;
-  padding: 0;
-  z-index: 1;
-  display: block;
-  margin-top: 40px;
-  margin-bottom: 55px;
-}
-
-.swiper-button-next, .swiper-button-prev {
-  color: #1f3e72;
-}
-
-.swiper-pagination-bullet {
-  background-color: #4361ee;
-}
-
-@media (max-width: 1024px) {
-  .swiper {
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-  .about-card {
-    max-width: 270px;
-  }
-}
-
-@media (max-width: 768px) {
-  .swiper {
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-  .about-card {
-    max-width: 100%; 
-  }
-} */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* About Section Styles */
 section.about {
     background-color: white;
-    margin-top: 425px;
+    margin-top: -10px;
     margin-bottom: 86px;
+    padding: 0 20px;
 }
 
 h2.primaryText {
   color: #1f3e72;
   font-size: 36px;
-  margin-top: 43px;
+  margin-top: 1px;
   margin-bottom: 0px;
-  margin-left: 15px;
+  margin-left: -1400px;
+  text-align: center;
 }
 
 .about-card {
@@ -146,11 +22,14 @@ h2.primaryText {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  height: 422px; 
+  height: auto;
+  min-height: 350px;
   width: 100%;   
   max-width: 365px;
   margin: 0 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .about-card:hover {
@@ -170,6 +49,7 @@ h2.primaryText {
   font-size: 22px;
   color: #1f3e72;
   margin: 10px 0 5px;
+  font-weight: 600;
 }
 
 .about-card .location {
@@ -194,13 +74,15 @@ h2.primaryText {
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: auto;
 }
 
 .about-card .book-now-btn:hover {
   background-color: #274cdb;
 }
 
-.swiper {
+/* Swiper Styles */
+.about-swiper {
   position: relative;
   overflow: hidden;
   padding: 0;
@@ -210,55 +92,73 @@ h2.primaryText {
   margin-bottom: 55px;
 }
 
-.swiper-button-next, .swiper-button-prev {
+.about-swiper .swiper-button-next, 
+.about-swiper .swiper-button-prev {
   color: #1f3e72;
 }
 
-.swiper-pagination-bullet {
+.about-swiper .swiper-pagination-bullet {
   background-color: #4361ee;
 }
 
-/* 📱 Tablet view */
+/* Tablet responsive */
 @media (max-width: 1024px) {
-  .swiper {
+  section.about {
+    margin-top: -33px;
+    margin-bottom: 60px;
+    padding: 0 15px;
+  }
+  
+  h2.primaryText {
+    font-size: 32px;
+    margin-left: -356px;
+  }
+
+  .about-swiper {
     margin-left: 20px;
     margin-right: 20px;
   }
+  
   .about-card {
-    max-width: 270px;
-    height: auto; /* fixed height hata diya */
+    max-width: 300px;
+    min-height: 320px;
+  }
+
+  .about-card img {
+    height: 180px;
   }
 }
 
-/* 📱 Mobile view */
+/* Mobile responsive */
 @media (max-width: 768px) {
   section.about {
-    margin-top: 60px;   /* bada gap hata diya */
+    margin-top: 60px;
     margin-bottom: 40px;
     padding: 0 10px;
   }
 
   h2.primaryText {
     font-size: 26px;
-    margin-left: -305px;
+    margin-left: 0;
     text-align: center;
-    margin-bottom: 11px;
-    margin-top: -44px;
+    margin-bottom: 20px;
+    margin-top: 20px;
   }
 
-  .swiper {
+  .about-swiper {
     margin: 0 auto;
     padding: 0 5px;
   }
 
   .about-card {
-    max-width: 100%; 
-    height: auto;
+    max-width: 100%;
+    min-height: 300px;
     margin: 15px auto;
+    padding: 15px;
   }
 
   .about-card img {
-    height: 180px; 
+    height: 160px;
   }
 
   .about-card .primaryText1 {
@@ -278,19 +178,65 @@ h2.primaryText {
     font-size: 15px;
     padding: 12px;
   }
+  
 }
 
-
-
-/* 📱 Mobile me card swipe look */
+/* Mobile swipe cards */
 @media (max-width: 768px) {
   .about-swiper .swiper-slide {
-    width: 47% !important;   /* ek card screen ka ~85% lega */
-    margin-right: 15px;      /* side gap */
+    width: 61% !important;
+    margin-right: 15px;
   }
 
   .about-card {
     max-width: 100%;
     height: auto;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .about-swiper .swiper-slide {
+    width: 66% !important;
+    margin-right: 15px;
+  }
+
+  section.about {
+    margin-top: 21px;
+    margin-bottom: 30px;
+    padding: 0 5px;
+  }
+
+  h2.primaryText {
+    font-size: 22px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: -90px;
+  }
+
+  .about-card {
+    min-height: 280px;
+    padding: 12px;
+  }
+
+  .about-card img {
+    height: 140px;
+  }
+
+  .about-card .primaryText1 {
+    font-size: 16px;
+  }
+
+  .about-card .location {
+    font-size: 12px;
+  }
+
+  .about-card .rupees {
+    font-size: 13px;
+  }
+
+  .about-card .book-now-btn {
+    font-size: 14px;
+    padding: 10px;
   }
 }
