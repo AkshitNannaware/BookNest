@@ -14,11 +14,22 @@ dotenv.config();
 
 const app = express();
 
+// app.use(cors({
+//   origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: ['https://your-vercel-domain.vercel.app', 'http://localhost:5173'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+
+
+
 app.use(express.json());
 app.use('/uploads', express.static('uploads')); // Serve image files
 
