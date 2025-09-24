@@ -37,13 +37,13 @@ const AdminDashboard = () => {
       try {
         // Fetch all data
         const [studentsRes, ownersRes, messagesRes] = await Promise.all([
-          fetch('http://localhost:5000/api/admin/students', {
+          fetch(`http://localhost:5000/api/admin/students`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch('http://localhost:5000/api/admin/owners', {
+          fetch(`http://localhost:5000/api/admin/owners`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch('http://localhost:5000/api/admin/messages', {
+          fetch(`http://localhost:5000/api/admin/messages`, {
             headers: { Authorization: `Bearer ${token}` },
           })
         ]);

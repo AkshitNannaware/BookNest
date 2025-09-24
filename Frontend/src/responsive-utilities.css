@@ -1,15 +1,3 @@
-/* BookNest Responsive Utilities */
-
-/* Mobile-First Responsive Design System */
-
-/* Breakpoints */
-/* 
-  Mobile: 320px - 480px
-  Tablet: 481px - 768px  
-  Desktop: 769px - 1024px
-  Large Desktop: 1025px+
-*/
-
 /* Container System */
 .responsive-container {
   width: 100%;

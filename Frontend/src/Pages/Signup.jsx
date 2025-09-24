@@ -6,7 +6,7 @@ const Signup = () => {
     username: '',
     email: '',
     password: '',
-    role: 'student, owner and admin', // Default role
+    role: 'student, owner and admin',
     photo: null,
   });
 
@@ -42,7 +42,7 @@ const Signup = () => {
     });
 
     try {
-        const response = await fetch("http://localhost:5000/api/auth/register", {
+        const response = await fetch(`http://localhost:5000/api/auth/register`, {
         method: "POST",
         body: submitData,
       });

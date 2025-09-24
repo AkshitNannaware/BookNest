@@ -8,7 +8,7 @@ const Home = () => {
   useEffect(() => {
     const fetchResidencies = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/rooms");  // Ensure the port is correct
+        const response = await fetch(`http://localhost:5000/api/rooms`);
         const data = await response.json();
         console.log(data);  // Log the fetched data for debugging
         setResidenciesList(data);

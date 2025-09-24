@@ -42,7 +42,7 @@ const RoomDetails = () => {
     if (Array.isArray(photos) && photos.length > 0) {
       const imageUrl = photos[0];
       if (imageUrl.startsWith("/uploads")) {
-        return `http://localhost:5000${imageUrl}`; // Local image
+        return `http://localhost:5000${imageUrl}`;
       } else if (imageUrl.startsWith("http")) {
         return imageUrl; // External URL
       }

@@ -20,7 +20,13 @@ const Residencies = ({ allRooms = [] }) => {
     try {
       const response = await fetch("http://localhost:5000/api/rooms/all");
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        throw new Error('HTTP error! status: ${response.status}');
+      }
+
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        const raw = await response.text();
+        throw new Error(`Expected JSON but got: ${raw.slice(0, 120)}`);
       }
 
       const data = await response.json();

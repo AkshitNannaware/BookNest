@@ -22,7 +22,38 @@ const OwnerDashboard = () => {
   const [token, setToken] = useState('');
   const [ownerId, setOwnerId] = useState('');
   const [userRole, setUserRole] = useState('');
-  const [activeTab, setActiveTab] = useState('upload'); // 'upload' or 'listings'
+  const [activeTab, setActiveTab] = useState('upload');
+
+
+
+
+
+
+  const getImageSrc = (photos) => {
+  if (Array.isArray(photos) && photos.length > 0) {
+    const imageUrl = photos[0];
+    if (typeof imageUrl !== 'string' || imageUrl.trim() === '') {
+      return 'https://via.placeholder.com/600x400?text=No+Image+Available';
+    }
+    if (imageUrl.startsWith('/uploads')) {
+      return `http://localhost:5000${imageUrl}`;
+    } else if (imageUrl.startsWith('http')) {
+      return imageUrl;
+    } else {
+      return `http://localhost:5000/${imageUrl}`;
+    }
+  }
+  return 'https://via.placeholder.com/600x400?text=No+Image+Available';
+};
+
+
+
+
+
+
+
+
+
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -41,7 +72,7 @@ const OwnerDashboard = () => {
   useEffect(() => {
     const fetchRentalHistory = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/rooms/rental-history', {
+        const response = await fetch(`http://localhost:5000/api/rooms/rental-history`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -104,7 +135,7 @@ const OwnerDashboard = () => {
         if (image) uploadData.append('photos', image);
       });
 
-      const response = await fetch('http://localhost:5000/api/rooms/upload', {
+      const response = await fetch(`http://localhost:5000/api/rooms/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -128,7 +159,7 @@ const OwnerDashboard = () => {
   const deleteRoom = async (roomId) => {
     if (window.confirm('Are you sure you want to delete this room?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/rooms/${roomId}`, {
+        const response = await fetch(`http:localhost:500/api/rooms/${roomId}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -464,9 +495,13 @@ const OwnerDashboard = () => {
                             {room.photos && room.photos.length > 0 ? (
                               <div className="md:w-1/3 h-48 md:h-auto">
                                 <img 
-                                  src={room.photos[0]} 
+                                   src={getImageSrc(room.photos)}
                                   alt={room.title} 
                                   className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = 'https://via.placeholder.com/600x400?text=No+Image+Available';
+                                  }}
                                 />
                               </div>
                             ) : (
