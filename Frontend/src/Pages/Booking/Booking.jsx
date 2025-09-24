@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import "./Booking.css";
+import { API_URL } from "../../config";
 
 const BookingForm = ({ roomId, roomName, roomPrice }) => {
   const [userDetails, setUserDetails] = useState({
@@ -44,7 +45,7 @@ const BookingForm = ({ roomId, roomName, roomPrice }) => {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/book-room`, {
+      const response = await fetch(`${API_URL}/api/book-room`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

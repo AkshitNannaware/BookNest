@@ -3,6 +3,7 @@ import { useParams, useLocation } from "react-router-dom";
 import "./RoomDetails.css";
 import axios from "axios";
 import BookingForm from "../../Booking/Booking";
+import { API_URL } from "../../../config";
 
 const RoomDetails = () => {
   const { id } = useParams();
@@ -22,7 +23,7 @@ const RoomDetails = () => {
 
     const fetchRoom = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/rooms/${id}`);
+        const res = await axios.get(`${API_URL}/api/rooms/${id}`);
         setRoom(res.data);
         console.log("Fetched room:", res.data);
         console.log("Fetched facilities", res.data.facilities);
@@ -42,7 +43,7 @@ const RoomDetails = () => {
     if (Array.isArray(photos) && photos.length > 0) {
       const imageUrl = photos[0];
       if (imageUrl.startsWith("/uploads")) {
-        return `http://localhost:5000${imageUrl}`;
+        return `${API_URL}${imageUrl}`;
       } else if (imageUrl.startsWith("http")) {
         return imageUrl; // External URL
       }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import "../Residencies/Residencies.css";
+import { API_URL } from "../../config";
 
 const Residencies = ({ allRooms = [] }) => {
   const [residenciesList, setResidenciesList] = useState([]);
@@ -18,7 +19,7 @@ const Residencies = ({ allRooms = [] }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:5000/api/rooms/all");
+      const response = await fetch(`${API_URL}/api/rooms/all`);
       if (!response.ok) {
         throw new Error('HTTP error! status: ${response.status}');
       }
@@ -88,7 +89,7 @@ const Residencies = ({ allRooms = [] }) => {
     if (Array.isArray(photos) && photos.length > 0) {
       const imageUrl = photos[0];   
       if (imageUrl.startsWith("/uploads")) {
-        return `http://localhost:5000${imageUrl}`;
+        return `${API_URL}${imageUrl}`;
       } else if (imageUrl.startsWith("http")) {
         return imageUrl;
       }

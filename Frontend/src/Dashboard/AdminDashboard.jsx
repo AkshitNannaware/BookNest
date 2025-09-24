@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { FiLogOut, FiUsers, FiHome, FiMail, FiDollarSign, FiCalendar, FiUser } from 'react-icons/fi';
+import { API_URL } from '../config';
 import { FaChalkboardTeacher, FaUserGraduate } from 'react-icons/fa';
 
 const AdminDashboard = () => {
@@ -37,13 +38,13 @@ const AdminDashboard = () => {
       try {
         // Fetch all data
         const [studentsRes, ownersRes, messagesRes] = await Promise.all([
-          fetch(`http://localhost:5000/api/admin/students`, {
+          fetch(`${API_URL}/api/admin/students`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch(`http://localhost:5000/api/admin/owners`, {
+          fetch(`${API_URL}/api/admin/owners`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch(`http://localhost:5000/api/admin/messages`, {
+          fetch(`${API_URL}/api/admin/messages`, {
             headers: { Authorization: `Bearer ${token}` },
           })
         ]);

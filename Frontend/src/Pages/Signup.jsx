@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_URL } from '../config';
 import { Eye, EyeOff, Upload, UserCircle, Building2, Shield } from 'lucide-react';
 
 const Signup = () => {
@@ -42,7 +43,7 @@ const Signup = () => {
     });
 
     try {
-        const response = await fetch(`http://localhost:5000/api/auth/register`, {
+        const response = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         body: submitData,
       });
@@ -110,7 +111,7 @@ const Signup = () => {
             </div>
 
             {/* Photo Upload */}
-            {/* <div>
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Profile Photo</label>
               <div className="relative">
                 <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 signin">
@@ -132,7 +133,7 @@ const Signup = () => {
                   />
                 </label>
               </div>
-            </div> */}
+            </div>
 
             {/* Username Input */}
             <div>
@@ -184,31 +185,6 @@ const Signup = () => {
                 </button>
               </div>
             </div>
-
-            {/* Photo Upload
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Profile Photo</label>
-              <div className="relative">
-                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100">
-                  {previewImage ? (
-                    <img src={previewImage} alt="Preview" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <Upload className="w-10 h-10 text-gray-400" />
-                    </div>
-                  )}
-                </div>
-                <label className="absolute bottom-0 right-0 bg-blue-500 p-2 rounded-full text-white cursor-pointer hover:bg-blue-600 transition-colors">
-                  <Upload className="w-4 h-4" />
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                  />
-                </label>
-              </div>
-            </div> */}
 
             {/* Submit Button */}
             <button

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { FiHome, FiMapPin, FiDollarSign, FiCalendar, FiTrash2, FiClock, FiAlertCircle } from 'react-icons/fi';
+import { API_URL } from '../config';
 import { FaBed, FaBath, FaWifi, FaParking, FaSnowflake } from 'react-icons/fa';
 
 const StudentDashboard = () => {
@@ -17,11 +18,11 @@ const StudentDashboard = () => {
         return 'https://via.placeholder.com/600x400?text=No+Image+Available';
       }
       if (imageUrl.startsWith('/uploads')) {
-        return `http://localhost:5000${imageUrl}`;
+        return `${API_URL}${imageUrl}`;
       } else if (imageUrl.startsWith('http')) {
         return imageUrl;
       } else {
-        return `http://localhost:5000${imageUrl}`;
+        return `${API_URL}${imageUrl}`;
       }
     }
     return 'https://via.placeholder.com/600x400?text=No+Image+Available';
@@ -43,7 +44,7 @@ const StudentDashboard = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/student/rented`, {
+      const response = await fetch(`${API_URL}/api/student/rented`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -86,7 +87,7 @@ const StudentDashboard = () => {
     if (!token) return;
 
     try {
-      const response = await fetch(`hhtp://localhost:5000/api/bookings/${bookingId}`, {
+      const response = await fetch(`${API_URL}/api/bookings/${bookingId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
