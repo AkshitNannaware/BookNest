@@ -21,11 +21,25 @@ const app = express();
 // }));
 
 
+// app.use(cors({
+//   origin: ['https://your-vercel-domain.vercel.app', 'http://localhost:5173'],
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
+
+
+
 app.use(cors({
-  origin: ['https://your-vercel-domain.vercel.app', 'http://localhost:5173'],
+  origin: [
+    'https://book-nest-319j9z8lm-akshitnannaware-gmailcoms-projects.vercel.app',
+    'http://localhost:5173'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
+
 
 
 
