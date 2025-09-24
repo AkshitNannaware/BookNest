@@ -259,7 +259,7 @@ body {
 .p-4 {
   padding: calc(var(--spacing) * 4);
   height: 110px;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 
@@ -325,7 +325,7 @@ th {
 }
 
 header.p-6.border-b.bg-white.shadow-sm.text-2xl.font-semibold {
-    font-size: 40px;
+    font-size: 30px;
 }
 
 .text-gray-800 {

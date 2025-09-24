@@ -1,11 +1,12 @@
 /* Contact Page Styles */
 .contact-container {
-  padding: 4rem 2rem 2rem;
-  max-width: 600px;
-  margin: 20px auto 30px auto;
-  background-color: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 1rem 2rem 2rem;
+    max-width: 500px;
+    margin: 33px auto 27px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px #00000014;
+    max-height: 539px;
 }
 
 .contactpage {

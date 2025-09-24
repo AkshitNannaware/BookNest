@@ -3,13 +3,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 50px;
+  padding: 0px 50px;
   background-color: aliceblue;
   border-bottom: 1px solid #eee;
   position: sticky;
   top: 0;
   z-index: 1000;
-  min-height: 80px;
+  min-height: 55px;
 }
 
 /* Tablet responsive */
@@ -27,15 +27,15 @@
   flex-shrink: 0;
 }
 .logo img.brand {
-  width: 130px;
-  height: 60px;
+  width: 103px;
+  height: 47px;
   border-radius: 6px;
   transition: transform 0.3s ease;
 }
 p.textbrand {
   font-weight: 600;
   color: #1f3e72;
-  font-size: 26px;
+  font-size: 23px;
   margin-left: 5px;
   white-space: nowrap;
 }
@@ -56,7 +56,7 @@ p.textbrand {
   display: flex;
   gap: 24px;
   align-items: center;
-  font-size: 27px;
+  font-size: 24px;
   font-weight: 500;
 }
 .nav {
@@ -110,7 +110,7 @@ p.textbrand {
   align-items: center;
   gap: 6px;
   color: black;
-  font-size: 35px;
+  font-size: 24px;
 }
 .dropdown-list {
   position: absolute;

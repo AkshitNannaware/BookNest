@@ -37,14 +37,14 @@
 }
 
 .gradient-text {
-  font-size: 72px;
+  font-size: 53px;
   font-weight: bold;
   margin-bottom: 20px;
   line-height: 1.2;
 }
 
 .black {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 500;
   margin-bottom: -20px;
 }
@@ -62,7 +62,8 @@
   border-radius: 12px;
   z-index: 3;
   width: 90%;
-  max-width: 657px;
+  max-width: 563px;
+  height: 70px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 

@@ -8,10 +8,10 @@ section.about {
 
 h2.primaryText {
   color: #1f3e72;
-  font-size: 36px;
+  font-size: 30px;
   margin-top: 1px;
   margin-bottom: 0px;
-  margin-left: -1400px;
+  margin-left: -1117px;
   text-align: center;
 }
 
@@ -23,8 +23,8 @@ h2.primaryText {
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: auto;
-  min-height: 350px;
-  width: 100%;   
+  min-height: 400px;
+  width: 88%;   
   max-width: 365px;
   margin: 0 10px;
   display: flex;
